@@ -1,7 +1,7 @@
 package com.cgz.capa;
 
 import com.cgz.capa.model.PermissionGroup;
-import com.cgz.capa.model.PermissionGroupFlag;
+import com.cgz.capa.model.enums.PermissionFlag;
 import com.cgz.capa.services.SystemPermissionsInfoService;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -37,6 +37,11 @@ public class SystemPermissionsInfoServiceTest {
 
     @Test(expected = IllegalStateException.class)
     public void testPermissionGroupsParsingFailsBeforeRead() throws Exception {
-        systemPermissionsInfoService.getPermissionGroups();
+        Map<String, PermissionGroup> permissionGroups =  systemPermissionsInfoService.getPermissionGroups();
+        assertEquals(permissionGroups.size(), 31);
+
     }
+
+    //TODO zy flagi sa dobrze zwracane z enumow -- nowy test
+
 }

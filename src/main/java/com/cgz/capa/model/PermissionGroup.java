@@ -1,5 +1,6 @@
 package com.cgz.capa.model;
 
+import com.cgz.capa.model.enums.PermissionGroupFlag;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
