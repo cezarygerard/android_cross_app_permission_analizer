@@ -1,6 +1,7 @@
 package com.cgz.capa.services;
 
-import com.cgz.capa.model.*;
+import com.cgz.capa.model.Permission;
+import com.cgz.capa.model.PermissionGroup;
 import com.cgz.capa.model.enums.PermissionFlag;
 import com.cgz.capa.model.enums.PermissionGroupFlag;
 import com.cgz.capa.model.enums.ProtectionLevel;
@@ -8,12 +9,13 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
+import javax.annotation.PostConstruct;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -41,7 +43,8 @@ public class SystemPermissionsInfoService {
         this.coreManifestUri = coreManifestUri;
     }
 
-    public void readCoreManifest() {
+    @PostConstruct
+    private void readCoreManifest() {
         URL url = null;
         try {
             url = new URL(coreManifestUri);
@@ -57,13 +60,11 @@ public class SystemPermissionsInfoService {
         } catch (SAXException e) {
             e.printStackTrace();
         }
-
-
     }
 
     private void parseManifest(Document manifestXmlDoc) {
-        permissions = new Hashtable<String, Permission>();
-        permissionGroups = new Hashtable<String, PermissionGroup>();
+        permissions = new LinkedHashMap<String, Permission>();
+        permissionGroups = new LinkedHashMap<String, PermissionGroup>();
         parsePermissionGroupsNodeList(manifestXmlDoc.getElementsByTagName(PERMISSION_GROUP_TAG_NAME));
         //sequence is important -parse groups first,
         parsePermissionsNodeList(manifestXmlDoc.getElementsByTagName(PERMISSION_TAG_NAME));
@@ -116,13 +117,15 @@ public class SystemPermissionsInfoService {
 
     private PermissionFlag decodeFlagFromPermissionNode(Node permissionFlagAttr) {
         if (permissionFlagAttr != null) {
-            String permissionFlagString = permissionFlagAttr.getNodeValue();
-            return PermissionFlag.getEnumValueByName(permissionFlagString);
+            return PermissionFlag.getEnumValueByName(permissionFlagAttr.getNodeValue());
         }
         return null;
     }
 
     private ProtectionLevel decodeProtectionLevelFromPermissionNode(Node protectionLevelAttr) {
+        if (protectionLevelAttr == null) {
+            return ProtectionLevel.NORMAL;
+        }
         return ProtectionLevel.getEnumValueByName(protectionLevelAttr.getNodeValue());
     }
 

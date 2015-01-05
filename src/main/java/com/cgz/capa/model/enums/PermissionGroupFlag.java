@@ -1,6 +1,6 @@
 package com.cgz.capa.model.enums;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -9,13 +9,12 @@ import java.util.Map;
 //TODO extract common code from enums in com.cgz.capa.model.enums;
 public enum PermissionGroupFlag {
 
-    PERSONAL_INFO("personalInfo"),
-    NONE("");
+    PERSONAL_INFO("personalInfo");
 
     private String name;
-    private static Map<String, PermissionGroupFlag> valuesMap = new Hashtable<String, PermissionGroupFlag>();
+    private static Map<String, PermissionGroupFlag> valuesMap = new HashMap<String, PermissionGroupFlag>();
 
-    private PermissionGroupFlag(String name){
+    private PermissionGroupFlag(String name) {
         this.name = name;
     }
 
@@ -23,20 +22,12 @@ public enum PermissionGroupFlag {
         return name;
     }
 
-    public static PermissionGroupFlag getEnumValueByName(String name){
-        if(name==null){
-            return NONE;
-        }
-
-        PermissionGroupFlag retVal = valuesMap.get(name);
-        if(retVal == null){
-            retVal = NONE;
-        }
-        return retVal;
+    public static PermissionGroupFlag getEnumValueByName(String name) {
+        return valuesMap.get(name);
     }
 
-    static{
-        for(PermissionGroupFlag enumVal : PermissionGroupFlag.values()){
+    static {
+        for (PermissionGroupFlag enumVal : PermissionGroupFlag.values()) {
             valuesMap.put(enumVal.name, enumVal);
         }
     }

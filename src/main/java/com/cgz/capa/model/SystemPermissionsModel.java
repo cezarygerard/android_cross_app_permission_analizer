@@ -1,7 +1,5 @@
 package com.cgz.capa.model;
 
-import java.util.Hashtable;
-
 /**
  * Created by czarek on 04/01/15.
  */

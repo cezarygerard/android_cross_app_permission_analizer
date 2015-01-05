@@ -25,7 +25,9 @@ public class Permission {
         this.group = group;
         this.protectionLevel = protectionLevel;
         this.flag = flag;
-        group.addPermission(name,this);
+        if (group != null) {
+            group.addPermission(name, this);
+        }
     }
 
     public String getName() {

@@ -1,6 +1,6 @@
 package com.cgz.capa.model.enums;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -12,11 +12,11 @@ public enum ProtectionLevel {
     NORMAL("normal"),
     DANGEROUS("dangerous"),
     SIGNATURE("signature"),
-    SIGNATURE_OR_SYSTEM("signatureOrSystem");
+    SIGNATURE_OR_SYSTEM("signature|system");
 
     private String name;
 
-    private static Map<String, ProtectionLevel> valuesMap = new Hashtable<String, ProtectionLevel> ();
+    private static Map<String, ProtectionLevel> valuesMap = new HashMap<String, ProtectionLevel>();
 
     private ProtectionLevel(String name) {
         this.name = name;
@@ -26,12 +26,17 @@ public enum ProtectionLevel {
         return name;
     }
 
-    public static ProtectionLevel getEnumValueByName(String name){
-        return valuesMap.get(name);
+    public static ProtectionLevel getEnumValueByName(String name) {
+        ProtectionLevel retVal = valuesMap.get(name);
+        if (retVal == null) {
+            return NORMAL;
+        }
+        return retVal;
     }
 
-    static{
-        for(ProtectionLevel enumVal : ProtectionLevel.values()){
+
+    static {
+        for (ProtectionLevel enumVal : ProtectionLevel.values()) {
             valuesMap.put(enumVal.name, enumVal);
         }
     }
