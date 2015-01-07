@@ -8,5 +8,5 @@ import org.springframework.stereotype.Service;
 @Service
 public class GooglePlayCrawlerService {
     //dla danej nazwy pakietowej pobierz listę uprawnien
-    //stateless!!
+    //stateless!
 }

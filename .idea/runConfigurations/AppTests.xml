@@ -9,8 +9,8 @@
     <module name="cross_app_permission_analizer_spring" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
     <option name="ALTERNATIVE_JRE_PATH" value="" />
-    <option name="PACKAGE_NAME" value="com.cgz.capa" />
-    <option name="MAIN_CLASS_NAME" value="com.cgz.capa.SystemPermissionsInfoServiceTest" />
+    <option name="PACKAGE_NAME" value="com.cgz.capa.services" />
+    <option name="MAIN_CLASS_NAME" value="com.cgz.capa.services.SystemPermissionsInfoServiceTests" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="class" />
     <option name="VM_PARAMETERS" value="-ea" />

@@ -25,8 +25,8 @@
         <module name="cross_app_permission_analizer_spring" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="cross_app_permission_analizer_spring" target="1.6" />
+    <bytecodeTargetLevel target="1.7">
+      <module name="cross_app_permission_analizer_spring" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>

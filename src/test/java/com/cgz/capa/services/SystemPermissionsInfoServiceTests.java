@@ -1,11 +1,10 @@
-package com.cgz.capa;
+package com.cgz.capa.services;
 
 import com.cgz.capa.model.Permission;
 import com.cgz.capa.model.PermissionGroup;
 import com.cgz.capa.model.enums.PermissionFlag;
 import com.cgz.capa.model.enums.PermissionGroupFlag;
 import com.cgz.capa.model.enums.ProtectionLevel;
-import com.cgz.capa.services.SystemPermissionsInfoService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring-config.xml")
-public class SystemPermissionsInfoServiceTest {
+public class SystemPermissionsInfoServiceTests {
 
 
     private static final int NUMBER_OF_PERMISSION_GROUPS = 31;

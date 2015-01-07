@@ -1,11 +1,11 @@
 package com.cgz.capa.services;
 
+import com.cgz.capa.exceptions.ServiceErrorException;
 import com.cgz.capa.model.Permission;
 import com.cgz.capa.model.PermissionGroup;
 import com.cgz.capa.model.enums.PermissionFlag;
 import com.cgz.capa.model.enums.PermissionGroupFlag;
 import com.cgz.capa.model.enums.ProtectionLevel;
-import org.springframework.stereotype.Component;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -13,6 +13,8 @@ import javax.annotation.PostConstruct;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.LinkedHashMap;
@@ -21,7 +23,6 @@ import java.util.Map;
 /**
  * Created by czarek on 04/01/15.
  */
-@Component
 public class SystemPermissionsInfoService {
 
     private static final String PERMISSION_TAG_NAME = "permission";
@@ -44,21 +45,26 @@ public class SystemPermissionsInfoService {
     }
 
     @PostConstruct
-    private void readCoreManifest() {
-        URL url = null;
+    private void readCoreManifest() throws ServiceErrorException {
+        InputStream is = null;
         try {
-            url = new URL(coreManifestUri);
+            URL url = new URL(coreManifestUri);
             URLConnection conn = url.openConnection();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document manifestXmlDoc = builder.parse(conn.getInputStream());
+            is = conn.getInputStream();
+            Document manifestXmlDoc = builder.parse(is);
             parseManifest(manifestXmlDoc);
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
+        } catch (IOException | ParserConfigurationException | SAXException e) {
+            throw new ServiceErrorException(e);
+        }finally {
+            if(is!=null){
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    throw new ServiceErrorException("Exception at closing stream after another exception. I will go kill myself", e);
+                }
+            }
         }
     }
 
