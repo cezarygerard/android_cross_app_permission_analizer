@@ -21,7 +21,6 @@ public class ApplicationDescriptionParserService {
     //grep -oh store/apps/details?id=[^\"\&]* pageString
     //TODO once fuckedup by new google play store layout, go for simple grepping html page
     //TODO consistent naming conventions
-    //TODO privatize everything but getSimilarAppsPackageNames
 
     private static final String APP_DETAILS_PATH = "/store/apps/details?id=";
     private static final String DEVELOPER_DETAILS_PATH = "/store/apps/developer?id=";
