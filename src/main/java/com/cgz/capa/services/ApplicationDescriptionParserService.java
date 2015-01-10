@@ -37,6 +37,8 @@ public class ApplicationDescriptionParserService {
 
 
     public  List<String> getSimilarAppsPackageNames(String appPacketName) throws ServiceErrorException {
+        //TODO validate arg
+
         String url = prepareAppUrlInStore(appPacketName);
         try {
             Document doc = Jsoup.connect(url).get();

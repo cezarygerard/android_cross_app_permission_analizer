@@ -24,4 +24,6 @@ public class ApplicationDescriptionParserServiceTest extends TestCase {
         assertEquals(16,similarAppsList.size());
     }
 
+    //TODO test  getSimilarAppsPackageNames(null) and getSimilarAppsPackageNames("");
+
 }
