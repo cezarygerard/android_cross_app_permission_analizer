@@ -1,5 +1,6 @@
-package com.cgz.capa.services;
+package com.cgz.capa;
 
+import com.cgz.capa.logic.services.SystemPermissionsInfoService;
 import com.cgz.capa.model.Permission;
 import com.cgz.capa.model.PermissionGroup;
 import com.cgz.capa.model.enums.PermissionFlag;
@@ -13,8 +14,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring-config.xml")

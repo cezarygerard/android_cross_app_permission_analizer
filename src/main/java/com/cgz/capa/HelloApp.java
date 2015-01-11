@@ -1,7 +1,6 @@
 package com.cgz.capa;
 
-import com.cgz.capa.services.GooglePlayCrawlerService;
-import com.cgz.capa.services.SystemPermissionsInfoService;
+import com.cgz.capa.logic.services.GooglePlayCrawlerService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

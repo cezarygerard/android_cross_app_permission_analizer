@@ -5,38 +5,37 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <bean id="SystemPermissionsInfoService" class="com.cgz.capa.services.SystemPermissionsInfoService">
+    <bean id="SystemPermissionsInfoService" class="com.cgz.capa.logic.services.SystemPermissionsInfoService">
         <constructor-arg
                 value="https://raw.githubusercontent.com/android/platform_frameworks_base/master/core/res/AndroidManifest.xml"/>
     </bean>
 
-    <bean id="ApplicationDescriptionParserService" class="com.cgz.capa.services.ApplicationDescriptionParserService">
+    <bean id="ApplicationDescriptionParserService" class="com.cgz.capa.logic.services.ApplicationDescriptionParserService">
         <constructor-arg
                 value="https://play.google.com"/>
     </bean>
 
-    <bean id="@Inject" class="com.cgz.capa.services.GooglePlayCrawlerService">
+    <bean id="GooglePlayCrawlerService" class="com.cgz.capa.logic.services.GooglePlayCrawlerService" scope="prototype">
         <constructor-arg index="0" value="${crawler.email}"/>
         <constructor-arg index="1" value="${crawler.password}"/>
-        <constructor-arg index="2" value="${crawler.androidid}"/>
     </bean>
-    <context:annotation-config/>
-    <context:component-scan base-package="com.cgz.capa"/>
+
+    <bean id="RiskScoreFactory" class="com.cgz.capa.logic.services.RiskScoreFactory">
+        <constructor-arg index="0" value="${riskScore.names}"/>
+        <constructor-arg index="1" value="${riskScore.points}"/>
+    </bean>
+
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:application.properties</value>
+                <value>classpath*:application.properties</value>
             </list>
         </property>
         <property name="ignoreResourceNotFound" value="false"/>
     </bean>
-    <!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">-->
-        <!---->
-        <!--<property name="driverClassName" value="${jdbc.driverClassName}" />-->
-        <!--<property name="url" value="${jdbc.url}" />-->
-        <!--<property name="username" value="${jdbc.username}" />-->
-        <!--<property name="password" value="${jdbc.password}" />-->
-    <!--</bean>-->
+
+    <context:annotation-config/>
+    <context:component-scan base-package="com.cgz.capa"/>
 
 </beans>

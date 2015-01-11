@@ -1,4 +1,4 @@
-package com.cgz.capa.services;
+package com.cgz.capa.logic.services;
 
 import com.cgz.capa.exceptions.ServiceErrorException;
 import org.jsoup.Jsoup;

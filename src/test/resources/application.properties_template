@@ -1,4 +1,7 @@
 # Login Information
 crawler.email=YOUR_GMAIL@gmail.com
 crawler.password=ONE_APP_PASSWORD
-crawler.androidid=ANDROID_ID
+
+#Names and scoring points of risk levels, from low to high
+riskScore.names=LOW,LOWER,NORMA,HIGH,HIGHER,DANGEROUS
+riskScore.points=100,300,500,1000,2000,5000
