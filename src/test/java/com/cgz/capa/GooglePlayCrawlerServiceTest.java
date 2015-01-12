@@ -38,4 +38,12 @@ public class GooglePlayCrawlerServiceTest{
         assertTrue(permissions_2.containsAll(permissions_1));
     }
 
+    //TODO tests with crappy arguments
+
+    @Test
+    public void testInvalidData() throws Exception {
+        List<String> permissions = googlePlayCrawlerService.getPermissionsForPackage("not.such.crap");
+        int i=0;
+        i++;
+    }
 }

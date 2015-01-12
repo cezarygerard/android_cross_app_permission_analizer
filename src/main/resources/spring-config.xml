@@ -7,12 +7,12 @@
 
     <bean id="SystemPermissionsInfoService" class="com.cgz.capa.logic.services.SystemPermissionsInfoService">
         <constructor-arg
-                value="https://raw.githubusercontent.com/android/platform_frameworks_base/master/core/res/AndroidManifest.xml"/>
+                value="${permissionsInfo.manifestUri}"/>
     </bean>
 
     <bean id="ApplicationDescriptionParserService" class="com.cgz.capa.logic.services.ApplicationDescriptionParserService">
         <constructor-arg
-                value="https://play.google.com"/>
+                value="${applicationDesctiption.googplePlayUri}"/>
     </bean>
 
     <bean id="GooglePlayCrawlerService" class="com.cgz.capa.logic.services.GooglePlayCrawlerService" scope="prototype">
@@ -34,6 +34,8 @@
         </property>
         <property name="ignoreResourceNotFound" value="false"/>
     </bean>
+
+    <bean id="PackageAnalysisAlgorithm" class="com.cgz.capa.logic.scoring.impl.BasicAlgorithm" autowire="constructor"/>
 
     <context:annotation-config/>
     <context:component-scan base-package="com.cgz.capa"/>
