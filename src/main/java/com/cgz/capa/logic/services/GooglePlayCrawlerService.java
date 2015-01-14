@@ -7,8 +7,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -20,7 +21,7 @@ public class GooglePlayCrawlerService {
 
     private static GooglePlayAPI service;
 
-    private static Map<String, List<String>> cachedPermissionLists = new ConcurrentHashMap<>();
+    private static Map<String, Set<String>> cachedPermissionLists = new ConcurrentHashMap<>();
     private final String password;
     private final String email;
 
@@ -37,7 +38,7 @@ public class GooglePlayCrawlerService {
         service.login();
     }
 
-    public List<String> getPermissionsForPackage(String packageName) throws ServiceException {
+    public Set<String> getPermissionsForPackage(String packageName) throws ServiceException {
 
         if(cachedPermissionLists.containsKey(packageName)){
             return cachedPermissionLists.get(packageName);
@@ -51,14 +52,17 @@ public class GooglePlayCrawlerService {
         }
         GooglePlay.AppDetails appDetails = details.getDocV2().getDetails().getAppDetails();
 
-        List<String> previous =  cachedPermissionLists.put(packageName, appDetails.getPermissionList());
+
+        Set<String> permissionsSet = new HashSet<>(appDetails.getPermissionList());
+
+        Set<String> previous =  cachedPermissionLists.put(packageName, permissionsSet);
 
         if(previous!=null){
             cachedPermissionLists.remove(packageName);
-            cachedPermissionLists.put(packageName, appDetails.getPermissionList());
+            cachedPermissionLists.put(packageName, permissionsSet);
         }
 
-        return appDetails.getPermissionList();
+        return permissionsSet;
     }
 
     private void validate(String... args) throws com.google.protobuf.ServiceException {

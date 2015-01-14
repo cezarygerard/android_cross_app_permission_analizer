@@ -10,9 +10,10 @@ import java.util.*;
  */
 public class RiskScoreFactory {
 
-    public static final String ERROR_MESSAGE = "Invalid config for RiskScoreService ";
-    public static final String PROPERTY_SEPARATOR= ",";
-    public static final int MIN_SCORE = 0;
+    private static final String ERROR_MESSAGE = "Invalid config for RiskScoreService ";
+    private static final String PROPERTY_SEPARATOR= ",";
+    public static final int MIN_SCORE = Integer.MIN_VALUE;
+    public static final int MAX_SCORE = Integer.MAX_VALUE;
     NavigableMap<Integer, String> ranges = new TreeMap<Integer, String>();
 
     public RiskScoreFactory(String levelNames, String levelPoints) throws ServiceException {
@@ -42,6 +43,9 @@ public class RiskScoreFactory {
     private void validateScore(int score) throws ServiceException {
         if(score<MIN_SCORE){
             throw new ServiceException("Score must not be below " + MIN_SCORE);
+        }
+        if(score>MAX_SCORE){
+            throw new ServiceException("Score must not be over " + MIN_SCORE);
         }
     }
 
@@ -120,6 +124,13 @@ public class RiskScoreFactory {
             return message;
         }
 
-
+        @Override
+        public String toString() {
+            return "RiskScoreInternal{" +
+                    "score=" + score +
+                    ", name='" + name + '\'' +
+                    ", message='" + message + '\'' +
+                    '}';
+        }
     }
 }
