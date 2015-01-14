@@ -10,14 +10,12 @@ import com.cgz.capa.logic.services.GooglePlayCrawlerService;
 import com.cgz.capa.logic.services.RiskScoreFactory;
 import com.cgz.capa.logic.services.SystemPermissionsInfoService;
 import com.cgz.capa.model.RiskScore;
-import com.cgz.capa.utils.AlgorithmTuple;
+import com.cgz.capa.utils.AlgorithmDataDTO;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by czarek on 11/01/15.
@@ -44,42 +42,43 @@ public class BasicAlgorithmExecutor implements AlgorithmExecutor {
 
 
     @Override
-    public List<RiskScore> executeAnalysis(String investigatedPackageName, List<String> investigatedPackagePermissions, List<AlgorithmStep> algorithmSteps) throws AlgorithmException {
+    public List<Pair<RiskScore, AlgorithmStep>> executeAnalysis(String investigatedPackageName, List<String> investigatedPackagePermissions, List<AlgorithmStep> algorithmSteps) throws AlgorithmException {
 
-        AlgorithmTuple tuple = prepareDataForAlgorithms(investigatedPackageName, investigatedPackagePermissions);
+        AlgorithmDataDTO tuple = prepareDataForAlgorithms(investigatedPackageName, investigatedPackagePermissions);
 
-        List<RiskScore> resultsList= new ArrayList<RiskScore>(algorithmSteps.size());
+        List<Pair<RiskScore,AlgorithmStep>> resultsList= new ArrayList<Pair<RiskScore,AlgorithmStep>>(algorithmSteps.size());
 
         for (AlgorithmStep step : algorithmSteps) {
-            resultsList.add(step.executeStep(tuple));
+            resultsList.add(Pair.of(step.executeStep(tuple), step));
         }
+
         return resultsList;
 
     }
 
-    private AlgorithmTuple prepareDataForAlgorithms(String investigatedPackageName, List<String> investigatedPackagePermissions) throws AlgorithmException {
-        AlgorithmTuple tuple;
+    protected AlgorithmDataDTO prepareDataForAlgorithms(String investigatedPackageName, List<String> investigatedPackagePermissions) throws AlgorithmException {
+        AlgorithmDataDTO tuple;
         try {
             List<String> similarAppNames = applicationDescriptionParserService.getSimilarAppsPackageNames(investigatedPackageName);
 
-            Map<String,List<String>> similarAppsPermissionsFromStore = downloadPermissionsForAll(similarAppNames);
-            List<String> investigateAppPermissionsFromStore = googlePlayCrawlerService.getPermissionsForPackage(investigatedPackageName);
+            Map<String,Set<String>> similarAppsPermissionsFromStore = downloadPermissionsForAll(similarAppNames);
+            Set<String> investigateAppPermissionsFromStore = googlePlayCrawlerService.getPermissionsForPackage(investigatedPackageName);
 
-            tuple = new AlgorithmTuple(investigatedPackageName, investigatedPackagePermissions, investigateAppPermissionsFromStore,  similarAppsPermissionsFromStore);
+            tuple = new AlgorithmDataDTO(investigatedPackageName, investigatedPackagePermissions, investigateAppPermissionsFromStore,  similarAppsPermissionsFromStore);
         } catch (ServiceException e) {
             throw new AlgorithmException(e);
         }
         return tuple;
     }
 
-    protected Map<String,List<String>> downloadPermissionsForAll(List<String> similarAppNames) {
-        Map<String,List<String>> similarAppsPermissions = new HashMap<>();
+    protected Map<String,Set<String>> downloadPermissionsForAll(List<String> similarAppNames) {
+        Map<String,Set<String>> similarAppsPermissions = new HashMap<>();
         for (String appName :similarAppNames) {
            synchronized (this){
                try {
-                   List<String> permList = googlePlayCrawlerService.getPermissionsForPackage(appName);
-                   similarAppsPermissions.put(appName, permList);
-                   logger.info("Permission for package" + appName + " : " + permList) ;
+                   Set<String> permSet = googlePlayCrawlerService.getPermissionsForPackage(appName);
+                   similarAppsPermissions.put(appName, permSet);
+                   logger.info("Permission for package" + appName + " : " + permSet) ;
                } catch (ServiceException e) {
                    logger.info("could not download permissions for package " + appName) ;
                }

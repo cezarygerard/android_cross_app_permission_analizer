@@ -9,7 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring-config.xml")
@@ -35,8 +36,4 @@ public class RiskScoreFactoryTest{
 
     }
 
-    @Test(expected = ServiceException.class)
-    public void testInvalidScore() throws Exception {
-        riskScoreFactory.createRiskScore(-5);
-    }
 }
