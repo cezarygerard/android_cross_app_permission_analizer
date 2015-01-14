@@ -1,9 +1,8 @@
 package com.cgz.capa;
 
-import com.cgz.capa.exceptions.ServiceErrorException;
+import com.cgz.capa.exceptions.ServiceException;
 import com.cgz.capa.logic.services.RiskScoreFactory;
 import com.cgz.capa.model.RiskScore;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,7 @@ public class RiskScoreFactoryTest{
 
     }
 
-    @Test(expected = ServiceErrorException.class)
+    @Test(expected = ServiceException.class)
     public void testInvalidScore() throws Exception {
         riskScoreFactory.createRiskScore(-5);
     }

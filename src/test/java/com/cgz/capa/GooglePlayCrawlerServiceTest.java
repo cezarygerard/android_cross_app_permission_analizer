@@ -1,8 +1,7 @@
 package com.cgz.capa;
 
-import com.cgz.capa.exceptions.ServiceErrorException;
+import com.cgz.capa.exceptions.ServiceException;
 import com.cgz.capa.logic.services.GooglePlayCrawlerService;
-import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +40,7 @@ public class GooglePlayCrawlerServiceTest{
 
     //TODO tests with crappy arguments
 
-    @Test(expected = ServiceErrorException.class)
+    @Test(expected = ServiceException.class)
     public void testInvalidData() throws Exception {
         List<String> permissions = googlePlayCrawlerService.getPermissionsForPackage("not.such.crap");
     }

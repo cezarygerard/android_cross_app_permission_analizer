@@ -25,6 +25,9 @@
         <constructor-arg index="1" value="${riskScore.points}"/>
     </bean>
 
+    <bean id="AlgorithmExecutor" class="com.cgz.capa.logic.scoring.impl.BasicAlgorithmExecutor" autowire="constructor"/>
+
+    <bean id="ResultAnalyser" class="com.cgz.capa.logic.scoring.impl.BasicResultAnalyser" autowire="constructor"/>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
@@ -35,7 +38,6 @@
         <property name="ignoreResourceNotFound" value="false"/>
     </bean>
 
-    <bean id="PackageAnalysisAlgorithm" class="com.cgz.capa.logic.scoring.impl.BasicAlgorithm" autowire="constructor"/>
 
     <context:annotation-config/>
     <context:component-scan base-package="com.cgz.capa"/>

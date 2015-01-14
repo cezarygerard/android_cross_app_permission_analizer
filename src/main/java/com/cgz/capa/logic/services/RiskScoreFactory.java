@@ -1,6 +1,6 @@
 package com.cgz.capa.logic.services;
 
-import com.cgz.capa.exceptions.ServiceErrorException;
+import com.cgz.capa.exceptions.ServiceException;
 import com.cgz.capa.model.RiskScore;
 
 import java.util.*;
@@ -15,7 +15,7 @@ public class RiskScoreFactory {
     public static final int MIN_SCORE = 0;
     NavigableMap<Integer, String> ranges = new TreeMap<Integer, String>();
 
-    public RiskScoreFactory(String levelNames, String levelPoints) throws ServiceErrorException {
+    public RiskScoreFactory(String levelNames, String levelPoints) throws ServiceException {
         List<String> names = parseRiskLevelNames(levelNames);
         List<Integer> points = parseRiskLevelPointsLevelPoints(levelPoints);
         validate(names, points);
@@ -28,39 +28,40 @@ public class RiskScoreFactory {
         ranges.put(points.get(points.size()-1), names.get(names.size()-1));
     }
 
-    public RiskScore createRiskScore(int score) throws ServiceErrorException {
+    public RiskScore createRiskScore(int score) throws ServiceException {
         return createRiskScoreWithMessage(score,null);
     }
 
-    public RiskScore createRiskScoreWithMessage(int score, String message) throws ServiceErrorException {
+    public RiskScore createRiskScoreWithMessage(int score, String message) throws ServiceException {
         validateScore(score);
         String name = ranges.floorEntry(score).getValue();
         return new RiskScoreInternal(score, name, message) ;
     }
 
-    private void validateScore(int score) throws ServiceErrorException {
+
+    private void validateScore(int score) throws ServiceException {
         if(score<MIN_SCORE){
-            throw new ServiceErrorException("Score must not be below " + MIN_SCORE);
+            throw new ServiceException("Score must not be below " + MIN_SCORE);
         }
     }
 
-    private void validate(List<String> names, List<Integer> pointsList) throws ServiceErrorException {
+    private void validate(List<String> names, List<Integer> pointsList) throws ServiceException {
         if(names == null || pointsList == null ){
-            throw new ServiceErrorException(ERROR_MESSAGE + " levelNames or levelPoints are null");
+            throw new ServiceException(ERROR_MESSAGE + " levelNames or levelPoints are null");
         }
 
         if(names.size()!= pointsList.size()+1){
-            throw new ServiceErrorException(ERROR_MESSAGE + " there should be one levelPoint fever than levelNames");
+            throw new ServiceException(ERROR_MESSAGE + " there should be one levelPoint fever than levelNames");
         }
 
         int lastScore = MIN_SCORE ;
         for (Integer point : pointsList) {
             if(point < MIN_SCORE){
-                throw new ServiceErrorException(ERROR_MESSAGE + " score must not be below " + MIN_SCORE);
+                throw new ServiceException(ERROR_MESSAGE + " score must not be below " + MIN_SCORE);
             }
 
             if(point < lastScore){
-                throw new ServiceErrorException(ERROR_MESSAGE + " levelPoint should be in ascending order");
+                throw new ServiceException(ERROR_MESSAGE + " levelPoint should be in ascending order");
             }
 
             lastScore=MIN_SCORE;
@@ -70,7 +71,7 @@ public class RiskScoreFactory {
 
     }
 
-    private List<Integer> parseRiskLevelPointsLevelPoints(String levelNames) throws ServiceErrorException {
+    private List<Integer> parseRiskLevelPointsLevelPoints(String levelNames) throws ServiceException {
         String [] points = levelNames.split(PROPERTY_SEPARATOR);
         ArrayList<Integer> pointsList = new ArrayList<Integer>(points.length);
         try {
@@ -78,7 +79,7 @@ public class RiskScoreFactory {
                 pointsList.add(Integer.parseInt(points[i]));
             }
         } catch (NumberFormatException e) {
-            throw new ServiceErrorException(ERROR_MESSAGE);
+            throw new ServiceException(ERROR_MESSAGE);
         }
 
         return pointsList;

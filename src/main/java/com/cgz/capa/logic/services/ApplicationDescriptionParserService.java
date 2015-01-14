@@ -1,6 +1,6 @@
 package com.cgz.capa.logic.services;
 
-import com.cgz.capa.exceptions.ServiceErrorException;
+import com.cgz.capa.exceptions.ServiceException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -36,7 +36,7 @@ public class ApplicationDescriptionParserService {
     }
 
 
-    public  List<String> getSimilarAppsPackageNames(String appPacketName) throws ServiceErrorException {
+    public  List<String> getSimilarAppsPackageNames(String appPacketName) throws ServiceException {
         //TODO validate arg
 
         String url = prepareAppUrlInStore(appPacketName);
@@ -54,24 +54,24 @@ public class ApplicationDescriptionParserService {
             }
             return similarAppsList;
         } catch (IOException e) {
-            throw new ServiceErrorException(e);
+            throw new ServiceException(e);
         }
     }
 
-    private String extractDeveloperName(Document doc) throws ServiceErrorException {
+    private String extractDeveloperName(Document doc) throws ServiceException {
         Elements developerNode = doc.select(LINK_TO_DEVELOPER_SELECTOR);
         if(developerNode == null || developerNode.size() == 0) {
-            throw new ServiceErrorException("cannot get original app developer name");
+            throw new ServiceException("cannot get original app developer name");
         }
 
         Element linkToDeveloper = developerNode.first();
         if(linkToDeveloper == null || !linkToDeveloper.hasAttr("href")){
-            throw new ServiceErrorException("cannot get original app developer name");
+            throw new ServiceException("cannot get original app developer name");
         }
 
         String hrefToDeveloper = linkToDeveloper.attr("href");
         if(hrefToDeveloper== null || hrefToDeveloper.length() < DEVELOPER_DETAILS_PATH.length()){
-            throw new ServiceErrorException("cannot get original app developer name");
+            throw new ServiceException("cannot get original app developer name");
         }
 
         return hrefToDeveloper.substring(DEVELOPER_DETAILS_PATH.length() , hrefToDeveloper.length());

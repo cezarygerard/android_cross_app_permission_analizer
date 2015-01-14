@@ -1,6 +1,6 @@
 package com.cgz.capa.logic.services;
 
-import com.cgz.capa.exceptions.ServiceErrorException;
+import com.cgz.capa.exceptions.ServiceException;
 import com.cgz.capa.model.Permission;
 import com.cgz.capa.model.PermissionGroup;
 import com.cgz.capa.model.enums.PermissionFlag;
@@ -45,7 +45,7 @@ public class SystemPermissionsInfoService {
     }
 
     @PostConstruct
-    private void readCoreManifest() throws ServiceErrorException {
+    private void readCoreManifest() throws ServiceException {
         InputStream is = null;
         try {
             URL url = new URL(coreManifestUri);
@@ -56,13 +56,13 @@ public class SystemPermissionsInfoService {
             Document manifestXmlDoc = builder.parse(is);
             parseManifest(manifestXmlDoc);
         } catch (IOException | ParserConfigurationException | SAXException e) {
-            throw new ServiceErrorException(e);
+            throw new ServiceException(e);
         }finally {
             if(is!=null){
                 try {
                     is.close();
                 } catch (IOException e) {
-                    throw new ServiceErrorException("Exception at closing stream after another exception. I will go kill myself", e);
+                    throw new ServiceException("Exception at closing stream after another exception. I will go kill myself", e);
                 }
             }
         }

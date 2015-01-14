@@ -9,4 +9,5 @@ public interface RiskScore {
     String getName();
 
     String getMessage();
+
 }

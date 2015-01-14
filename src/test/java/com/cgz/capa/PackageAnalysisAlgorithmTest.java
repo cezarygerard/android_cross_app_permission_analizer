@@ -1,7 +1,8 @@
 package com.cgz.capa;
 
-import com.cgz.capa.exceptions.AlgorithmErrorException;
-import com.cgz.capa.logic.scoring.interfaces.PackageAnalysisAlgorithm;
+import com.cgz.capa.exceptions.AlgorithmException;
+import com.cgz.capa.logic.scoring.interfaces.AlgorithmExecutor;
+import com.cgz.capa.logic.scoring.interfaces.AlgorithmStep;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +16,18 @@ import java.util.Collections;
 public class PackageAnalysisAlgorithmTest {
 
     @Autowired
-    private PackageAnalysisAlgorithm algorithm;
+    private AlgorithmExecutor algorithm;
 
     @Test
     public void testExecute() throws Exception {
-        algorithm.executeAnalysis("goldenshorestechnologies.brightestflashlight.free", Collections.<String>emptyList());
+        algorithm.executeAnalysis("goldenshorestechnologies.brightestflashlight.free",Collections.<String>emptyList(), Collections.<AlgorithmStep>emptyList());
 
     }
 
-    @Test(expected =  AlgorithmErrorException.class)
+    @Test(expected =  AlgorithmException.class)
     public void testExecuteAnalysisWhenNoSuchPackageInStore() throws Exception {
 
-            algorithm.executeAnalysis("lalala", Collections.<String>emptyList());
+            algorithm.executeAnalysis("lalala",Collections.<String>emptyList(), Collections.<AlgorithmStep>emptyList());
 
     }
 }
