@@ -42,11 +42,11 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.2</version>
         </dependency>
-            <dependency>
-                <groupId>com.akdeniz</groupId>
-                <artifactId>googleplaycrawler</artifactId>
-                <version>0.3-SNAPSHOT</version>
-            </dependency>
+        <dependency>
+            <groupId>com.akdeniz</groupId>
+            <artifactId>googleplaycrawler</artifactId>
+            <version>0.3-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -97,8 +97,10 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <id>make-assembly</id>
+                        <!-- this is used for inheritance merges -->
+                        <phase>package</phase>
+                        <!-- bind to the packaging phase -->
                         <goals>
                             <goal>single</goal>
                         </goals>

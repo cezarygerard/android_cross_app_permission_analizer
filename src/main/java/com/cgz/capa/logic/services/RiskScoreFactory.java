@@ -11,7 +11,7 @@ import java.util.*;
 public class RiskScoreFactory {
 
     private static final String ERROR_MESSAGE = "Invalid config for RiskScoreService ";
-    private static final String PROPERTY_SEPARATOR= ",";
+    private static final String PROPERTY_SEPARATOR = ",";
     public static final int MIN_SCORE = Integer.MIN_VALUE;
     public static final int MAX_SCORE = Integer.MAX_VALUE;
     NavigableMap<Integer, String> ranges = new TreeMap<Integer, String>();
@@ -23,60 +23,59 @@ public class RiskScoreFactory {
 
 
         ranges.put(MIN_SCORE, names.get(0));
-        for (int i = 0; i < names.size() -1; i++) {
-            ranges.put(points.get(i), names.get(i+1));
+        for (int i = 0; i < names.size() - 1; i++) {
+            ranges.put(points.get(i), names.get(i + 1));
         }
-        ranges.put(points.get(points.size()-1), names.get(names.size()-1));
+        ranges.put(points.get(points.size() - 1), names.get(names.size() - 1));
     }
 
     public RiskScore createRiskScore(int score) throws ServiceException {
-        return createRiskScoreWithMessage(score,null);
+        return createRiskScoreWithMessage(score, null);
     }
 
     public RiskScore createRiskScoreWithMessage(int score, String message) throws ServiceException {
         validateScore(score);
         String name = ranges.floorEntry(score).getValue();
-        return new RiskScoreInternal(score, name, message) ;
+        return new RiskScoreInternal(score, name, message);
     }
 
 
     private void validateScore(int score) throws ServiceException {
-        if(score<MIN_SCORE){
+        if (score < MIN_SCORE) {
             throw new ServiceException("Score must not be below " + MIN_SCORE);
         }
-        if(score>MAX_SCORE){
+        if (score > MAX_SCORE) {
             throw new ServiceException("Score must not be over " + MIN_SCORE);
         }
     }
 
     private void validate(List<String> names, List<Integer> pointsList) throws ServiceException {
-        if(names == null || pointsList == null ){
+        if (names == null || pointsList == null) {
             throw new ServiceException(ERROR_MESSAGE + " levelNames or levelPoints are null");
         }
 
-        if(names.size()!= pointsList.size()+1){
+        if (names.size() != pointsList.size() + 1) {
             throw new ServiceException(ERROR_MESSAGE + " there should be one levelPoint fever than levelNames");
         }
 
-        int lastScore = MIN_SCORE ;
+        int lastScore = MIN_SCORE;
         for (Integer point : pointsList) {
-            if(point < MIN_SCORE){
+            if (point < MIN_SCORE) {
                 throw new ServiceException(ERROR_MESSAGE + " score must not be below " + MIN_SCORE);
             }
 
-            if(point < lastScore){
+            if (point < lastScore) {
                 throw new ServiceException(ERROR_MESSAGE + " levelPoint should be in ascending order");
             }
 
-            lastScore=MIN_SCORE;
+            lastScore = MIN_SCORE;
         }
-
 
 
     }
 
     private List<Integer> parseRiskLevelPointsLevelPoints(String levelNames) throws ServiceException {
-        String [] points = levelNames.split(PROPERTY_SEPARATOR);
+        String[] points = levelNames.split(PROPERTY_SEPARATOR);
         ArrayList<Integer> pointsList = new ArrayList<Integer>(points.length);
         try {
             for (int i = 0; i < points.length; i++) {
@@ -90,7 +89,7 @@ public class RiskScoreFactory {
     }
 
     private List<String> parseRiskLevelNames(String levelNames) {
-        String [] levels = levelNames.split(PROPERTY_SEPARATOR);
+        String[] levels = levelNames.split(PROPERTY_SEPARATOR);
         return Arrays.asList(levels);
     }
 

@@ -46,10 +46,11 @@ public class BasicAlgorithmExecutor implements AlgorithmExecutor {
 
         AlgorithmDataDTO tuple = prepareDataForAlgorithms(investigatedPackageName, investigatedPackagePermissions);
 
-        List<Pair<RiskScore,AlgorithmStep>> resultsList= new ArrayList<Pair<RiskScore,AlgorithmStep>>(algorithmSteps.size());
+        List<Pair<RiskScore, AlgorithmStep>> resultsList = new ArrayList<Pair<RiskScore, AlgorithmStep>>(algorithmSteps.size());
 
         for (AlgorithmStep step : algorithmSteps) {
             resultsList.add(Pair.of(step.executeStep(tuple), step));
+            logger.warn(step.getClass().toString());
         }
 
         return resultsList;
@@ -61,32 +62,31 @@ public class BasicAlgorithmExecutor implements AlgorithmExecutor {
         try {
             List<String> similarAppNames = applicationDescriptionParserService.getSimilarAppsPackageNames(investigatedPackageName);
 
-            Map<String,Set<String>> similarAppsPermissionsFromStore = downloadPermissionsForAll(similarAppNames);
+            Map<String, Set<String>> similarAppsPermissionsFromStore = downloadPermissionsForAll(similarAppNames);
             Set<String> investigateAppPermissionsFromStore = googlePlayCrawlerService.getPermissionsForPackage(investigatedPackageName);
 
-            tuple = new AlgorithmDataDTO(investigatedPackageName, investigatedPackagePermissions, investigateAppPermissionsFromStore,  similarAppsPermissionsFromStore);
+            tuple = new AlgorithmDataDTO(investigatedPackageName, investigatedPackagePermissions, investigateAppPermissionsFromStore, similarAppsPermissionsFromStore);
         } catch (ServiceException e) {
             throw new AlgorithmException(e);
         }
         return tuple;
     }
 
-    protected Map<String,Set<String>> downloadPermissionsForAll(List<String> similarAppNames) {
-        Map<String,Set<String>> similarAppsPermissions = new HashMap<>();
-        for (String appName :similarAppNames) {
-           synchronized (this){
-               try {
-                   Set<String> permSet = googlePlayCrawlerService.getPermissionsForPackage(appName);
-                   similarAppsPermissions.put(appName, permSet);
-                   logger.info("Permission for package" + appName + " : " + permSet) ;
-               } catch (ServiceException e) {
-                   logger.info("could not download permissions for package " + appName) ;
-               }
-           }
+    protected Map<String, Set<String>> downloadPermissionsForAll(List<String> similarAppNames) {
+        Map<String, Set<String>> similarAppsPermissions = new HashMap<>();
+        for (String appName : similarAppNames) {
+            synchronized (this) {
+                try {
+                    Set<String> permSet = googlePlayCrawlerService.getPermissionsForPackage(appName);
+                    similarAppsPermissions.put(appName, permSet);
+                    logger.info("Permission for package" + appName + " : " + permSet);
+                } catch (ServiceException e) {
+                    logger.info("could not download permissions for package " + appName);
+                }
+            }
         }
         return similarAppsPermissions;
     }
-
 
 
 }

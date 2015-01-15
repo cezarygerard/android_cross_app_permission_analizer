@@ -37,8 +37,8 @@ public class SystemPermissionsInfoService {
 
     private String coreManifestUri;
 
-    private Map<String, Permission> permissions;
-    private Map<String, PermissionGroup> permissionGroups;
+    private Map<String, Permission> permissionsMap;
+    private Map<String, PermissionGroup> permissionGroupsMap;
 
     public SystemPermissionsInfoService(String coreManifestUri) {
         this.coreManifestUri = coreManifestUri;
@@ -57,8 +57,8 @@ public class SystemPermissionsInfoService {
             parseManifest(manifestXmlDoc);
         } catch (IOException | ParserConfigurationException | SAXException e) {
             throw new ServiceException(e);
-        }finally {
-            if(is!=null){
+        } finally {
+            if (is != null) {
                 try {
                     is.close();
                 } catch (IOException e) {
@@ -69,8 +69,8 @@ public class SystemPermissionsInfoService {
     }
 
     private void parseManifest(Document manifestXmlDoc) {
-        permissions = new LinkedHashMap<String, Permission>();
-        permissionGroups = new LinkedHashMap<String, PermissionGroup>();
+        permissionsMap = new LinkedHashMap<String, Permission>();
+        permissionGroupsMap = new LinkedHashMap<String, PermissionGroup>();
         parsePermissionGroupsNodeList(manifestXmlDoc.getElementsByTagName(PERMISSION_GROUP_TAG_NAME));
         //sequence is important -parse groups first,
         parsePermissionsNodeList(manifestXmlDoc.getElementsByTagName(PERMISSION_TAG_NAME));
@@ -92,7 +92,7 @@ public class SystemPermissionsInfoService {
             }
 
             PermissionGroupFlag permissionGroupFlag = decodePermissionGroupFlagString(attributes.getNamedItem(PERMISSION_GROUP_FLAGS_ATTR_NAME));
-            permissionGroups.put(permissionGroupName, new PermissionGroup(permissionGroupName, permissionGroupFlag, priority));
+            permissionGroupsMap.put(permissionGroupName, new PermissionGroup(permissionGroupName, permissionGroupFlag, priority));
         }
     }
 
@@ -109,7 +109,7 @@ public class SystemPermissionsInfoService {
             ProtectionLevel protectionLevel = decodeProtectionLevelFromPermissionNode(attributes.getNamedItem(PROTECTION_LEVEL_ATTR_NAME));
             PermissionFlag flag = decodeFlagFromPermissionNode(attributes.getNamedItem(PERMISSION_FLAGS_ATTR_NAME));
 
-            permissions.put(permissionName, new Permission(permissionName, group, protectionLevel, flag));
+            permissionsMap.put(permissionName, new Permission(permissionName, group, protectionLevel, flag));
         }
     }
 
@@ -140,24 +140,43 @@ public class SystemPermissionsInfoService {
         if (permissionGroupAttr != null) {
             String groupName = permissionGroupAttr.getNodeValue();
             if (groupName != null) {
-                return permissionGroups.get(groupName);
+                return permissionGroupsMap.get(groupName);
             }
         }
         return null;
     }
 
 
-    public Map<String, PermissionGroup> getPermissionGroups() {
-        if (permissionGroups == null) {
+    public Map<String, PermissionGroup> getPermissionGroupsMap() {
+        if (permissionGroupsMap == null) {
             throw new IllegalStateException("nothing was read yet");
         }
-        return permissionGroups;
+        return permissionGroupsMap;
     }
 
-    public Map<String, Permission> getPermissions() {
-        if (permissions == null) {
+    public Map<String, Permission> getPermissionsMap() {
+        if (permissionsMap == null) {
             throw new IllegalStateException("nothing was read yet");
         }
-        return permissions;
+        return permissionsMap;
+    }
+
+    public Permission getPermission(String permissionName) {
+        return permissionsMap.get(permissionName);
+    }
+
+    public PermissionGroup getPermissionsGroup(String permissionGroupName) {
+        return permissionGroupsMap.get(permissionGroupName);
+    }
+
+    public boolean usesPersonalInfo(Permission permission) {
+        if (permission.getGroup() == null) {
+            return false;
+        }
+        return PermissionGroupFlag.PERSONAL_INFO.equals(permission.getGroup().getFlag());
+    }
+
+    public boolean costsMoney(Permission permission) {
+        return PermissionFlag.COSTS_MONEY.equals(permission.getFlag());
     }
 }

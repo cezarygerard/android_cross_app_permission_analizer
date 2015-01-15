@@ -15,7 +15,8 @@
                 value="${permissionsInfo.manifestUri}"/>
     </bean>
 
-    <bean id="ApplicationDescriptionParserService" class="com.cgz.capa.logic.services.ApplicationDescriptionParserService">
+    <bean id="ApplicationDescriptionParserService"
+          class="com.cgz.capa.logic.services.ApplicationDescriptionParserService">
         <constructor-arg
                 value="${applicationDesctiption.googplePlayUri}"/>
     </bean>
@@ -44,13 +45,12 @@
     </bean>
 
 
-    <util:list id="algorithmSteps" list-class="java.util.ArrayList" value-type="com.cgz.capa.logic.scoring.interfaces.AlgorithmStep">
-        <ref bean="scoreAppPermissionsStep" />
-        <ref bean="contrastWithMarketVersionStep" />
-        <ref bean="contrastWithSimilarAppsStep" />
+    <util:list id="algorithmSteps" list-class="java.util.ArrayList"
+               value-type="com.cgz.capa.logic.scoring.interfaces.AlgorithmStep">
+        <ref bean="scoreAppPermissionsStep"/>
+        <ref bean="contrastWithMarketVersionStep"/>
+        <ref bean="contrastWithSimilarAppsStep"/>
     </util:list>
-
-
 
 
 </beans>
