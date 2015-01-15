@@ -1,5 +1,6 @@
 package com.cgz.capa.logic.scoring.interfaces;
 
+import com.cgz.capa.exceptions.AlgorithmException;
 import com.cgz.capa.model.RiskScore;
 import com.cgz.capa.utils.AlgorithmDataDTO;
 
@@ -8,5 +9,5 @@ import com.cgz.capa.utils.AlgorithmDataDTO;
  */
 public interface AlgorithmStep {
 
-    RiskScore executeStep(AlgorithmDataDTO algorithmDataDTO);
+    RiskScore executeStep(AlgorithmDataDTO algorithmDataDTO) throws AlgorithmException;
 }

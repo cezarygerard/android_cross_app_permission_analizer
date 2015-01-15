@@ -13,7 +13,6 @@ import java.util.List;
 
 /**
  * Created by czarek on 05/01/15.
- *
  */
 public class ApplicationDescriptionParserService {
     //grep command equivalents:
@@ -31,12 +30,12 @@ public class ApplicationDescriptionParserService {
 
     private String googlePlayStoreUrl;
 
-    public ApplicationDescriptionParserService(String googlePlayStoreUrl){
+    public ApplicationDescriptionParserService(String googlePlayStoreUrl) {
         this.googlePlayStoreUrl = googlePlayStoreUrl;
     }
 
 
-    public  List<String> getSimilarAppsPackageNames(String appPacketName) throws ServiceException {
+    public List<String> getSimilarAppsPackageNames(String appPacketName) throws ServiceException {
         //TODO validate arg
 
         String url = prepareAppUrlInStore(appPacketName);
@@ -46,9 +45,9 @@ public class ApplicationDescriptionParserService {
 
             Elements divsContainingAppLinks = doc.select(DIV_WITH_APPLINK_SELECTOR);
             List<String> similarAppsList = new ArrayList<>(divsContainingAppLinks.size());
-            for (Element div :divsContainingAppLinks) {
+            for (Element div : divsContainingAppLinks) {
                 String similarAppName = extractAppNameIfDifferentDeveloper(div, developerName);
-                if(similarAppName!=null) {
+                if (similarAppName != null) {
                     similarAppsList.add(similarAppName);
                 }
             }
@@ -60,60 +59,61 @@ public class ApplicationDescriptionParserService {
 
     private String extractDeveloperName(Document doc) throws ServiceException {
         Elements developerNode = doc.select(LINK_TO_DEVELOPER_SELECTOR);
-        if(developerNode == null || developerNode.size() == 0) {
+        if (developerNode == null || developerNode.size() == 0) {
             throw new ServiceException("cannot get original app developer name");
         }
 
         Element linkToDeveloper = developerNode.first();
-        if(linkToDeveloper == null || !linkToDeveloper.hasAttr("href")){
+        if (linkToDeveloper == null || !linkToDeveloper.hasAttr("href")) {
             throw new ServiceException("cannot get original app developer name");
         }
 
         String hrefToDeveloper = linkToDeveloper.attr("href");
-        if(hrefToDeveloper== null || hrefToDeveloper.length() < DEVELOPER_DETAILS_PATH.length()){
+        if (hrefToDeveloper == null || hrefToDeveloper.length() < DEVELOPER_DETAILS_PATH.length()) {
             throw new ServiceException("cannot get original app developer name");
         }
 
-        return hrefToDeveloper.substring(DEVELOPER_DETAILS_PATH.length() , hrefToDeveloper.length());
+        return hrefToDeveloper.substring(DEVELOPER_DETAILS_PATH.length(), hrefToDeveloper.length());
     }
 
     private String extractAppNameIfDifferentDeveloper(Element div, String originalAppDeveloperName) {
 
         Elements appLinkNode = div.select(LINK_TO_SIMILAR_APP_SELECTOR);
-        if(appLinkNode == null || appLinkNode.size() == 0) {
+        if (appLinkNode == null || appLinkNode.size() == 0) {
             return null;
         }
 
         Element appLinkElement = appLinkNode.first();
-        if(appLinkElement == null || !appLinkElement.hasAttr("href")){
+        if (appLinkElement == null || !appLinkElement.hasAttr("href")) {
             return null;
         }
         String appLink = appLinkElement.attr("href");
 
         Elements appDeveloperNode = div.select(LINK_TO_SIMILAR_APP_DEVELOPER);
-        if(appDeveloperNode == null || appDeveloperNode.size() == 0) {
+        if (appDeveloperNode == null || appDeveloperNode.size() == 0) {
             return null;
         }
 
         Element appDeveloperLinkElement = appDeveloperNode.first();
-        if(appLink == null || !appDeveloperLinkElement.hasAttr("href")){
+        if (appLink == null || !appDeveloperLinkElement.hasAttr("href")) {
             return null;
         }
 
         String appDeveloperLink = appDeveloperLinkElement.attr("href");
-        if(appDeveloperLink== null || appDeveloperLink.length() < DEVELOPER_DETAILS_PATH.length()){
+        if (appDeveloperLink == null || appDeveloperLink.length() < DEVELOPER_DETAILS_PATH.length()) {
             return null;
         }
 
-        String appDeveloper = appDeveloperLink.substring(DEVELOPER_DETAILS_PATH.length() , appDeveloperLink.length() );;
+        String appDeveloper = appDeveloperLink.substring(DEVELOPER_DETAILS_PATH.length(), appDeveloperLink.length());
+        ;
 
-        if(appDeveloper.equals(originalAppDeveloperName)) {
+        if (appDeveloper.equals(originalAppDeveloperName)) {
             return null;
         }
-        return  appLink.substring(APP_DETAILS_PATH.length(), appLink.length());
+        return appLink.substring(APP_DETAILS_PATH.length(), appLink.length());
     }
 
     private String prepareAppUrlInStore(String appPacketName) {
-            return googlePlayStoreUrl+APP_DETAILS_PATH+appPacketName;
+        return googlePlayStoreUrl + APP_DETAILS_PATH + appPacketName;
     }
 }

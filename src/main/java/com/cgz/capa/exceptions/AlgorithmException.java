@@ -9,7 +9,7 @@ public class AlgorithmException extends Exception {
     }
 
     public AlgorithmException(String message, Throwable throwable) {
-        super(message,throwable);
+        super(message, throwable);
     }
 
     public AlgorithmException(String message) {

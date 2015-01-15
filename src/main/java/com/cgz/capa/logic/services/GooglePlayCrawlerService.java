@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,11 +28,11 @@ public class GooglePlayCrawlerService {
     public GooglePlayCrawlerService(String email, String password) throws Exception {
         validate(email, password);
         this.email = email;
-        this.password=password;
+        this.password = password;
     }
 
     @PostConstruct
-    public  void setupAnd() throws Exception{
+    public void setupAnd() throws Exception {
         service = new GooglePlayAPI(email, password);
         service.checkin();
         service.login();
@@ -40,7 +40,7 @@ public class GooglePlayCrawlerService {
 
     public Set<String> getPermissionsForPackage(String packageName) throws ServiceException {
 
-        if(cachedPermissionLists.containsKey(packageName)){
+        if (cachedPermissionLists.containsKey(packageName)) {
             return cachedPermissionLists.get(packageName);
         }
 
@@ -52,12 +52,11 @@ public class GooglePlayCrawlerService {
         }
         GooglePlay.AppDetails appDetails = details.getDocV2().getDetails().getAppDetails();
 
+        Set<String> permissionsSet = new LinkedHashSet<>(appDetails.getPermissionList());
 
-        Set<String> permissionsSet = new HashSet<>(appDetails.getPermissionList());
+        Set<String> previous = cachedPermissionLists.put(packageName, permissionsSet);
 
-        Set<String> previous =  cachedPermissionLists.put(packageName, permissionsSet);
-
-        if(previous!=null){
+        if (previous != null) {
             cachedPermissionLists.remove(packageName);
             cachedPermissionLists.put(packageName, permissionsSet);
         }
@@ -67,7 +66,7 @@ public class GooglePlayCrawlerService {
 
     private void validate(String... args) throws com.google.protobuf.ServiceException {
         for (int i = 0; i < args.length; i++) {
-            if(StringUtils.isEmpty(args[i])){
+            if (StringUtils.isEmpty(args[i])) {
                 throw new com.google.protobuf.ServiceException("prameter must not be empty");
             }
         }

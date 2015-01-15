@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring-config.xml")
-public class GooglePlayCrawlerServiceTest{
+public class GooglePlayCrawlerServiceTest {
 
     @Autowired
     private GooglePlayCrawlerService googlePlayCrawlerService;
@@ -28,16 +28,7 @@ public class GooglePlayCrawlerServiceTest{
     public void testDownloadPermission() throws Exception {
         Set<String> permissions = googlePlayCrawlerService.getPermissionsForPackage(APP_PACKAGE_TO_TEST);
         assertNotNull(permissions);
-        assertTrue(0<permissions.size());
-    }
-
-    @Test
-    public void testPrototyping() throws Exception {
-        assertNotSame(googlePlayCrawlerService, googlePlayCrawlerService2);
-        Set<String> permissions_1 = googlePlayCrawlerService.getPermissionsForPackage(APP_PACKAGE_TO_TEST);
-        Set<String> permissions_2 = googlePlayCrawlerService2.getPermissionsForPackage(APP_PACKAGE_TO_TEST);
-        assertTrue(permissions_1.containsAll(permissions_2));
-        assertTrue(permissions_2.containsAll(permissions_1));
+        assertTrue(0 < permissions.size());
     }
 
     //TODO tests with crappy arguments

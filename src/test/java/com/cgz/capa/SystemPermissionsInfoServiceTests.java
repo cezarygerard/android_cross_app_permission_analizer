@@ -32,7 +32,7 @@ public class SystemPermissionsInfoServiceTests {
 
     @Test
     public void testPermissionGroupsParsing() throws Exception {
-        Map<String, PermissionGroup> permissionGroups = systemPermissionsInfoService.getPermissionGroups();
+        Map<String, PermissionGroup> permissionGroups = systemPermissionsInfoService.getPermissionGroupsMap();
         assertTrue(permissionGroups.size() == NUMBER_OF_PERMISSION_GROUPS);
 
         PermissionGroup pg = permissionGroups.get("android.permission-group.SYNC_SETTINGS");
@@ -45,14 +45,14 @@ public class SystemPermissionsInfoServiceTests {
 
     @Test
     public void testPermissionsParsing() throws Exception {
-        Map<String, Permission> permissions = systemPermissionsInfoService.getPermissions();
+        Map<String, Permission> permissions = systemPermissionsInfoService.getPermissionsMap();
         assertTrue(permissions.size() == NUMBER_OF_PERMISSIONS);
 
         Permission p = permissions.get("android.permission.CALL_PHONE");
         assertEquals(PermissionFlag.COSTS_MONEY, p.getFlag());
         assertEquals(ProtectionLevel.DANGEROUS, p.getProtectionLevel());
 
-        PermissionGroup phoneCallsGroup = systemPermissionsInfoService.getPermissionGroups().get("android.permission-group.PHONE_CALLS");
+        PermissionGroup phoneCallsGroup = systemPermissionsInfoService.getPermissionGroupsMap().get("android.permission-group.PHONE_CALLS");
         assertEquals(phoneCallsGroup, p.getGroup());
 
         assertTrue(phoneCallsGroup.containsPermission(p.getName()));

@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring-config.xml")
-public class ApplicationDescriptionParserServiceTest{
+public class ApplicationDescriptionParserServiceTest {
 
     @Autowired
     private ApplicationDescriptionParserService applicationDescriptionParserService;
@@ -23,7 +23,7 @@ public class ApplicationDescriptionParserServiceTest{
     @Test
     public void testGetSimilarAppsPackageNames() throws Exception {
         List<String> similarAppsList = applicationDescriptionParserService.getSimilarAppsPackageNames("com.ea.game.pvz2_row");
-        assertEquals(16,similarAppsList.size());
+        assertEquals(16, similarAppsList.size());
     }
 
     //TODO test  getSimilarAppsPackageNames(null) and getSimilarAppsPackageNames("");

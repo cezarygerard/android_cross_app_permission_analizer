@@ -1,6 +1,5 @@
 package com.cgz.capa;
 
-import com.cgz.capa.exceptions.ServiceException;
 import com.cgz.capa.logic.services.RiskScoreFactory;
 import com.cgz.capa.model.RiskScore;
 import org.junit.Test;
@@ -14,7 +13,7 @@ import static org.junit.Assert.assertFalse;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring-config.xml")
-public class RiskScoreFactoryTest{
+public class RiskScoreFactoryTest {
 
     @Autowired
     private RiskScoreFactory riskScoreFactory;
