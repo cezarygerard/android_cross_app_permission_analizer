@@ -11,6 +11,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+//@SpringApplicationConfiguration(classes = Application.class)
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring-config.xml")
 public class ApplicationDescriptionParserServiceTest {

@@ -14,6 +14,7 @@ import com.cgz.capa.utils.AlgorithmDataDTO;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
@@ -23,6 +24,9 @@ import java.util.*;
  */
 public class BasicAlgorithmExecutor implements AlgorithmExecutor {
 
+
+    @Autowired
+    private List<AlgorithmStep> algorithmSteps;
 
     protected ApplicationDescriptionParserService applicationDescriptionParserService;
     protected GooglePlayCrawlerService googlePlayCrawlerService;
@@ -55,6 +59,11 @@ public class BasicAlgorithmExecutor implements AlgorithmExecutor {
 
         return resultsList;
 
+    }
+
+    @Override
+    public List<Pair<RiskScore, AlgorithmStep>> executeAnalysisAllSteps(String investigatedPackageName, List<String> investigatedPackagePermissions) throws AlgorithmException {
+        return executeAnalysis(investigatedPackageName, investigatedPackagePermissions, algorithmSteps);
     }
 
     protected AlgorithmDataDTO prepareDataForAlgorithms(String investigatedPackageName, List<String> investigatedPackagePermissions) throws AlgorithmException {

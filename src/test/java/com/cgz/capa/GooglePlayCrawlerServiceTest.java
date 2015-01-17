@@ -10,7 +10,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring-config.xml")
@@ -29,6 +30,14 @@ public class GooglePlayCrawlerServiceTest {
         Set<String> permissions = googlePlayCrawlerService.getPermissionsForPackage(APP_PACKAGE_TO_TEST);
         assertNotNull(permissions);
         assertTrue(0 < permissions.size());
+        permissions = googlePlayCrawlerService.getPermissionsForPackage("com.skype.raider");
+        assertNotNull(permissions);
+        assertTrue(0 < permissions.size());
+        permissions = googlePlayCrawlerService.getPermissionsForPackage("se.feomedia.quizkampen.pl.lite");
+        assertNotNull(permissions);
+        assertTrue(0 < permissions.size());
+
+
     }
 
     //TODO tests with crappy arguments

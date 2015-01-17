@@ -18,7 +18,7 @@
     <bean id="ApplicationDescriptionParserService"
           class="com.cgz.capa.logic.services.ApplicationDescriptionParserService">
         <constructor-arg
-                value="${applicationDesctiption.googplePlayUri}"/>
+                value="${applicationDescription.googlePlayUri}"/>
     </bean>
 
     <bean id="GooglePlayCrawlerService" class="com.cgz.capa.logic.services.GooglePlayCrawlerService" scope="singleton">
@@ -35,6 +35,78 @@
 
     <bean id="ResultAnalyser" class="com.cgz.capa.logic.scoring.impl.BasicResultAnalyser" autowire="constructor"/>
 
+    <bean id="ScoreAppPermissionsStep" class="com.cgz.capa.logic.scoring.impl.steps.ScoreAppPermissionsStep">
+        <constructor-arg index="0">
+            <map>
+                <entry key="costsMoney" value="${scoreAppPermissions.permission.flag.costs.money}"/>
+                <entry key="normal" value="${scoreAppPermissions.permission.protectionLevel.normal}"/>
+                <entry key="dangerous" value="${scoreAppPermissions.permission.protectionLevel.dangerous}"/>
+                <entry key="signature" value="${scoreAppPermissions.permission.protectionLevel.signature}"/>
+                <entry key="signature|System"
+                       value="${scoreAppPermissions.permission.protectionLevel.signatureOrSystem}"/>
+                <entry key="personalInfo" value="${scoreAppPermissionsStep.permissionGroup.flag.personalInfo}"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+
+    <bean id="ContrastWithMarketVersionStep"
+          class="com.cgz.capa.logic.scoring.impl.steps.ContrastWithMarketVersionStep">
+        <constructor-arg index="0">
+            <map>
+                <entry key="costsMoney" value="${contrastWithMarket.newPermission.flag.costs.money}"/>
+                <entry key="normal" value="${contrastWithMarket.newPermission.protectionLevel.normal}"/>
+                <entry key="dangerous" value="${contrastWithMarket.newPermission.protectionLevel.dangerous}"/>
+                <entry key="signature" value="${contrastWithMarket.newPermission.protectionLevel.signature}"/>
+                <entry key="signature|System"
+                       value="${contrastWithMarket.newPermission.protectionLevel.signatureOrSystem}"/>
+                <entry key="personalInfo"
+                       value="${contrastWithMarket.newPermission.permissionGroup.flag.personalInfo}"/>
+            </map>
+        </constructor-arg>
+        <constructor-arg index="1" value="${contrastWithMarket.appNotFoundInMarket}"/>
+    </bean>
+
+
+    <bean id="ContrastWithSimilarAppsStep" class="com.cgz.capa.logic.scoring.impl.steps.ContrastWithSimilarAppsStep">
+        <constructor-arg index="0">
+            <map>
+                <entry key="costsMoney"
+                       value="${contrastWithSimilarAppsStep.uniquePermissionInSimilarApps.flag.costs.money}"/>
+                <entry key="normal"
+                       value="${contrastWithSimilarAppsStep.uniquePermissionInSimilarApps.protectionLevel.normal}"/>
+                <entry key="dangerous"
+                       value="${contrastWithSimilarAppsStep.uniquePermissionInSimilarApps.protectionLevel.dangerous}"/>
+                <entry key="signature"
+                       value="${contrastWithSimilarAppsStep.uniquePermissionInSimilarApps.protectionLevel.signature}"/>
+                <entry key="signature|System"
+                       value="${contrastWithSimilarAppsStep.uniquePermissionInSimilarApps.protectionLevel.signatureOrSystem}"/>
+                <entry key="personalInfo"
+                       value="${contrastWithSimilarAppsStep.uniquePermissionInSimilarApps.permissionGroup.flag.personalInfo}"/>
+            </map>
+        </constructor-arg>
+        <constructor-arg index="1">
+            <map>
+                <entry key="costsMoney"
+                       value="${contrastWithSimilarAppsStep.rarePermissionInSimilarApps.flag.costs.money}"/>
+                <entry key="normal"
+                       value="${contrastWithSimilarAppsStep.rarePermissionInSimilarApps.protectionLevel.normal}"/>
+                <entry key="dangerous"
+                       value="${contrastWithSimilarAppsStep.rarePermissionInSimilarApps.protectionLevel.dangerous}"/>
+                <entry key="signature"
+                       value="${contrastWithSimilarAppsStep.rarePermissionInSimilarApps.protectionLevel.signature}"/>
+                <entry key="signature|System"
+                       value="${contrastWithSimilarAppsStep.rarePermissionInSimilarApps.protectionLevel.signatureOrSystem}"/>
+                <entry key="personalInfo"
+                       value="${contrastWithSimilarAppsStep.rarePermissionInSimilarApps.permissionGroup.flag.personalInfo}"/>
+            </map>
+        </constructor-arg>
+        <constructor-arg index="2" value="${contrastWithSimilarAppsStep.rarePermissionBracket}"/>
+    </bean>
+
+    <!--<bean id="RestController" class="com.cgz.capa.web.RestController"/>-->
+
+
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
@@ -47,9 +119,9 @@
 
     <util:list id="algorithmSteps" list-class="java.util.ArrayList"
                value-type="com.cgz.capa.logic.scoring.interfaces.AlgorithmStep">
-        <ref bean="scoreAppPermissionsStep"/>
-        <ref bean="contrastWithMarketVersionStep"/>
-        <ref bean="contrastWithSimilarAppsStep"/>
+        <ref bean="ScoreAppPermissionsStep"/>
+        <ref bean="ContrastWithMarketVersionStep"/>
+        <ref bean="ContrastWithSimilarAppsStep"/>
     </util:list>
 
 

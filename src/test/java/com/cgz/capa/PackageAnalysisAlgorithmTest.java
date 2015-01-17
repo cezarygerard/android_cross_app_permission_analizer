@@ -42,12 +42,14 @@ public class PackageAnalysisAlgorithmTest {
         permissionsSet = crawlerService.getPermissionsForPackage("goldenshorestechnologies.brightestflashlight.free");
     }
 
+
+    //TODO w kazdej metodzie rozgraniczyc jej wykonanie w logu
+
     @Test
     public void testExecute() throws Exception {
         List<Pair<RiskScore, AlgorithmStep>> results = algorithm.executeAnalysis("goldenshorestechnologies.brightestflashlight.free", new ArrayList<String>(permissionsSet), algorithmSteps);
         analyser.analise(results);
         //TODO assert
-
 
     }
 
