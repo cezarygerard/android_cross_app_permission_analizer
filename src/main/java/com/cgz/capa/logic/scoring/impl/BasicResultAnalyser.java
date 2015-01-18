@@ -6,6 +6,7 @@ import com.cgz.capa.logic.scoring.interfaces.AlgorithmStep;
 import com.cgz.capa.logic.scoring.interfaces.ResultAnalyser;
 import com.cgz.capa.logic.services.RiskScoreFactory;
 import com.cgz.capa.model.RiskScore;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,9 @@ public class BasicResultAnalyser implements ResultAnalyser {
             RiskScore riskScore = result.getLeft();
             if (riskScore != null) {
                 finalScore += riskScore.getScore();
-                finalMessageStringBuilder.append(riskScore.getMessage()).append("\n");
+                if(StringUtils.isNotEmpty(riskScore.getMessage())) {
+                    finalMessageStringBuilder.append(riskScore.getMessage()).append(System.getProperty("line.separator"));
+                }
             }
 
             logger.warn("Algorithm step " + result.getRight().getClass() + " scored: " + riskScore);
