@@ -37,12 +37,7 @@ public class ContrastWithMarketVersionStep extends AbstractStep implements Algor
         Set<String> permissionsFromStore = downloadPermissionsFromStore(algorithmDataDTO);
         ;
         if (permissionsFromStore == null) {
-            try {
                 return riskScoreFactory.createRiskScoreWithMessage(appNotFoundScore, "App was not found in store");
-            } catch (ServiceException e) {
-                logger.error("Creating RiskScore failed", e);
-                throw new AlgorithmException("Creating RiskScore failed", e);
-            }
         }
 
         for (String permissionName : algorithmDataDTO.getManifestPermissions()) {
@@ -53,7 +48,7 @@ public class ContrastWithMarketVersionStep extends AbstractStep implements Algor
             }
             if (!permissionsFromStore.contains(permissionName)) {
                 scoreValue += evaluateRisk(permission, riskScoreMap);
-                stringBuilder.append(permissionName).append(" , ");
+                stringBuilder.append(permissionName).append(" ; ");
             }
         }
 
@@ -63,16 +58,10 @@ public class ContrastWithMarketVersionStep extends AbstractStep implements Algor
     private RiskScore prepareResult(int scoreValue, StringBuilder stringBuilder) throws AlgorithmException {
 
         String permissions = stringBuilder.toString();
-        try {
-            if (StringUtils.isNotEmpty(permissions)) {
-                return riskScoreFactory.createRiskScoreWithMessage(scoreValue, "App uses some more permissions than declared: " + permissions);
-            } else {
-                return riskScoreFactory.createRiskScore(scoreValue);
-            }
-
-        } catch (ServiceException e) {
-            logger.error("Creating RiskScore failed", e);
-            throw new AlgorithmException("Creating RiskScore failed", e);
+        if (StringUtils.isNotEmpty(permissions)) {
+            return riskScoreFactory.createRiskScoreWithMessage(scoreValue, "App uses some more permissions than declared in Google Play: " + permissions);
+        } else {
+            return riskScoreFactory.createRiskScore(scoreValue);
         }
     }
 

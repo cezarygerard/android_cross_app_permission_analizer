@@ -46,10 +46,6 @@ public class ContrastWithSimilarAppsStep extends AbstractStep implements Algorit
         this.riskScoreRarePermissionMap = riskScoreRarePermissionMap;
     }
 
-    //czy aplikacja nie korzysta z uprawnien których nikt inny nie ma (prawie nikt inny - konfigurowalne)  [scoring - parametr]
-//czy aplikacja nie korzysta z uprawnien krytycznych/platnych/prywatnych których nikt inny nie ma (prawie nikt inny)   [scoring - parametr]
-//model ktory sprawdzilby ile to oznacza zadna/prawie zadna/rzadko np: 0/1-2/2-0.33wszystkich/
-
     @Override
     public RiskScore executeStep(AlgorithmDataDTO algorithmDataDTO) throws AlgorithmException {
 
@@ -61,12 +57,7 @@ public class ContrastWithSimilarAppsStep extends AbstractStep implements Algorit
             scoreValue += calculateRisk(algorithmDataDTO, permissionUsageCounter, permissionName);
         }
 
-        try {
-            return riskScoreFactory.createRiskScore(scoreValue);
-        } catch (ServiceException e) {
-            logger.error("Creating RiskScore failed", e);
-            throw new AlgorithmException("Creating RiskScore failed", e);
-        }
+        return riskScoreFactory.createRiskScore(scoreValue);
     }
 
     private int calculateRisk(AlgorithmDataDTO algorithmDataDTO, Map<String, Integer> permissionUsageCounter, String permissionName) {

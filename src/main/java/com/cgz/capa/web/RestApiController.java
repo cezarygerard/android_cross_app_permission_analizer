@@ -2,11 +2,11 @@ package com.cgz.capa.web;
 
 import com.cgz.capa.exceptions.AlgorithmException;
 import com.cgz.capa.exceptions.ServiceException;
-import com.cgz.capa.exceptions.WebApplicationException;
 import com.cgz.capa.logic.scoring.interfaces.AlgorithmExecutor;
 import com.cgz.capa.logic.scoring.interfaces.AlgorithmStep;
 import com.cgz.capa.logic.scoring.interfaces.ResultAnalyser;
 import com.cgz.capa.logic.services.GooglePlayCrawlerService;
+import com.cgz.capa.logic.services.RiskScoreFactory;
 import com.cgz.capa.model.RiskScore;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
@@ -14,10 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 /**
 * Created by czarek on 17/01/15.
@@ -37,32 +35,53 @@ public class RestApiController {
     @Autowired
     private GooglePlayCrawlerService crawlerService;
 
+    @Autowired
+    private RiskScoreFactory riskScoreFactory;
+
     @RequestMapping(value = "analiseFromStore", method = RequestMethod.GET)
     public
     @ResponseBody
-    RiskScore analiseFromStore(@RequestParam(value = "packageName", required = true) String packageName) throws WebApplicationException {
+    RiskScore analiseFromStore(@RequestParam(value = "packageName", required = true) String packageName, HttpServletResponse response)  {
         try {
             Set<String> permissionsForPackage = crawlerService.getPermissionsForPackage(packageName);
             List<Pair<RiskScore, AlgorithmStep>> results = algorithm.executeAnalysisAllSteps(packageName, new ArrayList<String>(permissionsForPackage));
             return analyser.analise(results);
         } catch (ServiceException | AlgorithmException e) {
-            logger.error("Error happened: ", e);
-            throw new WebApplicationException("Error happened: ", e);
+            return handleError(response, e);
         }
+    }
+
+    private RiskScore handleError(HttpServletResponse response, Exception e) {
+        //TODO better error handling
+        logger.error("Error happened: ", e);
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        return riskScoreFactory.createRiskScoreWithMessage(0, "ERROR HAPPENED");
     }
 
     @RequestMapping(value = "permissionsFromStore", method = RequestMethod.GET)
     public
     @ResponseBody
-    Collection<String> permissionsFromStore(@RequestParam(value = "packageName", required = true) String packageName) throws WebApplicationException {
+    Collection<String> permissionsFromStore(@RequestParam(value = "packageName", required = true) String packageName, HttpServletResponse response)  {
         try {
             Collection<String> permissionsForPackage = crawlerService.getPermissionsForPackage(packageName);
             return permissionsForPackage;
         } catch (ServiceException e) {
+            //TODO better error handling
             logger.error("Error happened: ", e);
-            throw new WebApplicationException("Error happened: ", e);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return Collections.<String>emptyList();
         }
     }
 
-    //TODO analize [postem wysylana lista uprawnien]
+    @RequestMapping(value = "analise", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    RiskScore analise(@RequestParam(value = "packageName", required = true) String packageName, @RequestBody(required = true) List<String> packagePermissions, HttpServletResponse response)  {
+        try {
+            List<Pair<RiskScore, AlgorithmStep>> results = algorithm.executeAnalysisAllSteps(packageName, packagePermissions);
+            return analyser.analise(results);
+        } catch (AlgorithmException e) {
+            return handleError(response, e);
+        }
+    }
 }

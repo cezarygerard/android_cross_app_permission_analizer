@@ -44,14 +44,10 @@ public class BasicResultAnalyser implements ResultAnalyser {
             logger.warn("Algorithm step " + result.getRight().getClass() + " scored: " + riskScore);
         }
 
-        try {
             RiskScore finalRS = riskScoreFactory.createRiskScoreWithMessage(finalScore, finalMessageStringBuilder.toString());
             logger.warn("Cumulative score: " + finalRS);
             return finalRS;
-        } catch (ServiceException e) {
-            logger.error("BasicResultAnalyser: error while creating  RiskScore : ", e);
-            throw new AlgorithmException("BasicResultAnalyser: error while creating  RiskScore : ", e);
-        }
+
 
     }
 }

@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="cross_app_permission_analizer_spring:war exploded">
-    <output-path>$PROJECT_DIR$/target/war_exploaded</output-path>
+    <output-path>$PROJECT_DIR$/target/CrossAppPermissionAnalzizer</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
@@ -35,12 +35,15 @@
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.4.3" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.4.0" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.4.3" />
+          <element id="library" level="project" name="Maven: javax.servlet:javax.servlet-api:3.0.1" />
+          <element id="library" level="project" name="Maven: org.skyscreamer:jsonassert:1.2.3" />
+          <element id="library" level="project" name="Maven: org.json:json:20090211" />
         </element>
       </element>
-      <element id="javaee-facet-resources" facet="cross_app_permission_analizer_spring/web/Web" />
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/target/MANIFEST.MF" />
       </element>
+      <element id="javaee-facet-resources" facet="cross_app_permission_analizer_spring/web/Web" />
     </root>
   </artifact>
 </component>

@@ -1,6 +1,7 @@
 package com.cgz.capa.logic.services;
 
 import com.cgz.capa.exceptions.ServiceException;
+import com.cgz.capa.exceptions.ServiceRuntimeException;
 import com.cgz.capa.model.RiskScore;
 
 import java.util.*;
@@ -29,23 +30,23 @@ public class RiskScoreFactory {
         ranges.put(points.get(points.size() - 1), names.get(names.size() - 1));
     }
 
-    public RiskScore createRiskScore(int score) throws ServiceException {
-        return createRiskScoreWithMessage(score, null);
+    public RiskScore createRiskScore(int score) {
+        return createRiskScoreWithMessage(score, "");
     }
 
-    public RiskScore createRiskScoreWithMessage(int score, String message) throws ServiceException {
+    public RiskScore createRiskScoreWithMessage(int score, String message) {
         validateScore(score);
         String name = ranges.floorEntry(score).getValue();
         return new RiskScoreInternal(score, name, message);
     }
 
 
-    private void validateScore(int score) throws ServiceException {
+    private void validateScore(int score) {
         if (score < MIN_SCORE) {
-            throw new ServiceException("Score must not be below " + MIN_SCORE);
+            throw new ServiceRuntimeException("Score must not be below " + MIN_SCORE);
         }
         if (score > MAX_SCORE) {
-            throw new ServiceException("Score must not be over " + MIN_SCORE);
+            throw new ServiceRuntimeException("Score must not be over " + MIN_SCORE);
         }
     }
 
