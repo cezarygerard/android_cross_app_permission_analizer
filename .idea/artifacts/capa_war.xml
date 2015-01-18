@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="capa:war">
+    <output-path>$PROJECT_DIR$/target/war</output-path>
+    <root id="archive" name="capa_war.war">
+      <element id="artifact" artifact-name="capa:war exploded" />
+    </root>
+  </artifact>
+</component>
