@@ -5,6 +5,7 @@ import com.cgz.capa.exceptions.ServiceException;
 import com.cgz.capa.logic.scoring.interfaces.AlgorithmExecutor;
 import com.cgz.capa.logic.scoring.interfaces.AlgorithmStep;
 import com.cgz.capa.logic.scoring.interfaces.ResultAnalyser;
+import com.cgz.capa.logic.services.ApplicationDescriptionParserService;
 import com.cgz.capa.logic.services.GooglePlayCrawlerService;
 import com.cgz.capa.logic.services.RiskScoreFactory;
 import com.cgz.capa.model.RiskScore;
@@ -38,13 +39,16 @@ public class RestApiController {
     @Autowired
     private RiskScoreFactory riskScoreFactory;
 
+    @Autowired
+    private ApplicationDescriptionParserService applicationDescriptionParserService;
+
     @RequestMapping(value = "analiseFromStore", method = RequestMethod.GET)
     public
     @ResponseBody
     RiskScore analiseFromStore(@RequestParam(value = "packageName", required = true) String packageName, HttpServletResponse response)  {
         try {
             Set<String> permissionsForPackage = crawlerService.getPermissionsForPackage(packageName);
-            List<Pair<RiskScore, AlgorithmStep>> results = algorithm.executeAnalysisAllSteps(packageName, new ArrayList<String>(permissionsForPackage));
+            List<Pair<RiskScore, AlgorithmStep>> results = algorithm.executeAllSteps(packageName, new ArrayList<String>(permissionsForPackage));
             return analyser.analise(results);
         } catch (ServiceException | AlgorithmException e) {
             return handleError(response, e);
@@ -77,11 +81,27 @@ public class RestApiController {
     public
     @ResponseBody
     RiskScore analise(@RequestParam(value = "packageName", required = true) String packageName, @RequestBody(required = true) List<String> packagePermissions, HttpServletResponse response)  {
+
         try {
-            List<Pair<RiskScore, AlgorithmStep>> results = algorithm.executeAnalysisAllSteps(packageName, packagePermissions);
+            List<Pair<RiskScore, AlgorithmStep>> results = algorithm.executeAllSteps(packageName, packagePermissions);
             return analyser.analise(results);
         } catch (AlgorithmException e) {
             return handleError(response, e);
+        }
+
+    }
+
+    @RequestMapping(value = "similarApps", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    Collection<String> similarAppsFromStore(@RequestParam(value = "packageName", required = true) String packageName, HttpServletResponse response)  {
+        try {
+            return  applicationDescriptionParserService.getSimilarAppsPackageNames(packageName);
+        } catch (ServiceException e) {
+            //TODO better error handling
+            logger.error("Error happened: ", e);
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return Collections.<String>emptyList();
         }
     }
 }

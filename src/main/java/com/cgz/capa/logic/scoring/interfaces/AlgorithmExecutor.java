@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface AlgorithmExecutor {
 
-    public List<Pair<RiskScore, AlgorithmStep>> executeAnalysis(String investigatedPackageName, List<String> investigatedPackagePermissions, List<AlgorithmStep> algorithmSteps) throws AlgorithmException;
+    List<Pair<RiskScore, AlgorithmStep>> execute(String investigatedPackageName, List<String> investigatedPackagePermissions, List<AlgorithmStep> algorithmSteps) throws AlgorithmException;
 
-    public List<Pair<RiskScore, AlgorithmStep>> executeAnalysisAllSteps(String investigatedPackageName, List<String> investigatedPackagePermissions) throws AlgorithmException;
+    List<Pair<RiskScore, AlgorithmStep>> executeAllSteps(String investigatedPackageName, List<String> investigatedPackagePermissions) throws AlgorithmException;
 }

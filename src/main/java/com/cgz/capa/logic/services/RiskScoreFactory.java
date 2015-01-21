@@ -37,7 +37,7 @@ public class RiskScoreFactory {
     public RiskScore createRiskScoreWithMessage(int score, String message) {
         validateScore(score);
         String name = ranges.floorEntry(score).getValue();
-        return new RiskScoreInternal(score, name, message);
+        return new RiskScore(score, name, message);
     }
 
 
@@ -83,7 +83,7 @@ public class RiskScoreFactory {
                 pointsList.add(Integer.parseInt(points[i]));
             }
         } catch (NumberFormatException e) {
-            throw new ServiceException(ERROR_MESSAGE);
+            throw new ServiceException(ERROR_MESSAGE, e);
         }
 
         return pointsList;
@@ -94,43 +94,4 @@ public class RiskScoreFactory {
         return Arrays.asList(levels);
     }
 
-    /**
-     *
-     */
-    private class RiskScoreInternal implements RiskScore {
-
-        private int score;
-        private String name;
-        private String message;
-
-        public RiskScoreInternal(int score, String name, String message) {
-            this.score = score;
-            this.name = name;
-            this.message = message;
-        }
-
-        @Override
-        public int getScore() {
-            return score;
-        }
-
-        @Override
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public String getMessage() {
-            return message;
-        }
-
-        @Override
-        public String toString() {
-            return "RiskScoreInternal{" +
-                    "score=" + score +
-                    ", name='" + name + '\'' +
-                    ", message='" + message + '\'' +
-                    '}';
-        }
-    }
 }

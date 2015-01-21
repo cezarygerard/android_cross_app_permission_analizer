@@ -113,7 +113,7 @@ public class ApplicationDescriptionParserService {
         return appLink.substring(APP_DETAILS_PATH.length(), appLink.length());
     }
 
-    private String prepareAppUrlInStore(String appPacketName) {
+    public String prepareAppUrlInStore(String appPacketName) {
         return googlePlayStoreUrl + APP_DETAILS_PATH + appPacketName;
     }
 }

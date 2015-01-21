@@ -25,6 +25,11 @@ import java.util.*;
 public class BasicAlgorithmExecutor implements AlgorithmExecutor {
 
 
+    public static final long MAX_RETRIES_WHEN_DOWNLOADING = 0;
+    //Added, so google wont block our calls
+    public static final long SLEEP_TIME_ON_FAILED_DOWNLOAD_IN_MILIS = 30000;
+    //Added, so google wont block our calls
+    public static final long SLEEP_TIME_ON_SUCCESS_DOWNLOAD_IN_MILIS = 1000;
     @Autowired
     private List<AlgorithmStep> algorithmSteps;
 
@@ -46,7 +51,7 @@ public class BasicAlgorithmExecutor implements AlgorithmExecutor {
 
 
     @Override
-    public List<Pair<RiskScore, AlgorithmStep>> executeAnalysis(String investigatedPackageName, List<String> investigatedPackagePermissions, List<AlgorithmStep> algorithmSteps) throws AlgorithmException {
+    public List<Pair<RiskScore, AlgorithmStep>> execute(String investigatedPackageName, List<String> investigatedPackagePermissions, List<AlgorithmStep> algorithmSteps) throws AlgorithmException {
 
         AlgorithmDataDTO tuple = prepareDataForAlgorithms(investigatedPackageName, investigatedPackagePermissions);
 
@@ -62,8 +67,8 @@ public class BasicAlgorithmExecutor implements AlgorithmExecutor {
     }
 
     @Override
-    public List<Pair<RiskScore, AlgorithmStep>> executeAnalysisAllSteps(String investigatedPackageName, List<String> investigatedPackagePermissions) throws AlgorithmException {
-        return executeAnalysis(investigatedPackageName, investigatedPackagePermissions, algorithmSteps);
+    public List<Pair<RiskScore, AlgorithmStep>> executeAllSteps(String investigatedPackageName, List<String> investigatedPackagePermissions) throws AlgorithmException {
+        return execute(investigatedPackageName, investigatedPackagePermissions, algorithmSteps);
     }
 
     protected AlgorithmDataDTO prepareDataForAlgorithms(String investigatedPackageName, List<String> investigatedPackagePermissions) throws AlgorithmException {
@@ -85,16 +90,48 @@ public class BasicAlgorithmExecutor implements AlgorithmExecutor {
         Map<String, Set<String>> similarAppsPermissions = new HashMap<>();
         for (String appName : similarAppNames) {
             synchronized (this) {
-                try {
-                    Set<String> permSet = googlePlayCrawlerService.getPermissionsForPackage(appName);
+
+                Set<String> permSet  = downloadPermissionsInternal(appName, 0);
+                if(permSet!= null){
                     similarAppsPermissions.put(appName, permSet);
-                    logger.info("Permission for package" + appName + " : " + permSet);
-                } catch (ServiceException e) {
-                    logger.info("could not download permissions for package " + appName);
+                } else {
+                    logger.error("could not download permissions EVEN AFTER RETRYING");
                 }
             }
         }
         return similarAppsPermissions;
+    }
+
+    public Set<String> downloadPermissionsInternal(String appName, int tries){
+        Set<String> permSet = null;
+        try {
+           permSet = googlePlayCrawlerService.getPermissionsForPackage(appName);
+            logger.info("Permission for package" + appName + " : " + permSet);
+        } catch (ServiceException e) {
+            logger.error("could not download permissions for package, " +  appName +"   tried:  " + (tries + 1) + "  times" , e);
+        }
+
+        if(tries > MAX_RETRIES_WHEN_DOWNLOADING){
+            return null;
+        }
+
+        if(permSet == null){
+
+            sleep(SLEEP_TIME_ON_FAILED_DOWNLOAD_IN_MILIS);
+            return  downloadPermissionsInternal(appName, tries + 1);
+        }
+
+
+        sleep(SLEEP_TIME_ON_SUCCESS_DOWNLOAD_IN_MILIS);
+        return permSet;
+    }
+
+    private void sleep(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            logger.error("ops! ",e);
+        }
     }
 
 

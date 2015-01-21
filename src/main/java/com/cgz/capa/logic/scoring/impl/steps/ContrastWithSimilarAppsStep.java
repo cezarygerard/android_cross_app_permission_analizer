@@ -36,12 +36,15 @@ public class ContrastWithSimilarAppsStep extends AbstractStep implements Algorit
 
     protected double rarePermissionBracket;
 
+    protected double uniquePermissionBracket;
+
     protected Map<String, Integer> riskScoreUniquePermissionMap;
 
     protected Map<String, Integer> riskScoreRarePermissionMap;
 
-    public ContrastWithSimilarAppsStep(Map<String, Integer> riskScoreUniquePermissionMap, Map<String, Integer> riskScoreRarePermissionMap, double rarePermissionBracket) {
+    public ContrastWithSimilarAppsStep(Map<String, Integer> riskScoreUniquePermissionMap, Map<String, Integer> riskScoreRarePermissionMap, double rarePermissionBracket, double uniquePermissionBracket) {
         this.rarePermissionBracket = rarePermissionBracket;
+        this.uniquePermissionBracket = uniquePermissionBracket;
         this.riskScoreUniquePermissionMap = riskScoreUniquePermissionMap;
         this.riskScoreRarePermissionMap = riskScoreRarePermissionMap;
     }
@@ -53,22 +56,25 @@ public class ContrastWithSimilarAppsStep extends AbstractStep implements Algorit
 
         int scoreValue = 0;
 
+        StringBuilder messageBuilder = new StringBuilder().append("Comparing with similar apps. ");
+
         for (String permissionName : algorithmDataDTO.getManifestPermissions()) {
-            scoreValue += calculateRisk(algorithmDataDTO, permissionUsageCounter, permissionName);
+            scoreValue += calculateRisk(algorithmDataDTO, permissionUsageCounter, permissionName, messageBuilder);
         }
 
-        return riskScoreFactory.createRiskScore(scoreValue);
+        return riskScoreFactory.createRiskScoreWithMessage(scoreValue, messageBuilder.toString());
     }
 
-    private int calculateRisk(AlgorithmDataDTO algorithmDataDTO, Map<String, Integer> permissionUsageCounter, String permissionName) {
+    private int calculateRisk(AlgorithmDataDTO algorithmDataDTO, Map<String, Integer> permissionUsageCounter, String permissionName, StringBuilder messageBuilder) {
         int scoreValue = 0;
         Permission permission = permissionsInfoService.getPermission(permissionName);
         if (permission != null) {
-            if (isUniquePermission(permissionName, permissionUsageCounter)) {
-                scoreValue += evaluateRisk(permission, riskScoreUniquePermissionMap);
-            }
-            if (isItRarePermission(permissionName, permissionUsageCounter, algorithmDataDTO.getSimilarAppsPermissions().size())) {
-                scoreValue += evaluateRisk(permission, riskScoreRarePermissionMap);
+            if (isUniquePermission(permissionName, permissionUsageCounter, algorithmDataDTO.getSimilarAppsPermissions().size())) {
+                messageBuilder.append(permissionName).append(" is unique. ");
+                scoreValue += evaluateRisk(permission, riskScoreUniquePermissionMap, messageBuilder);
+            } else if (isItRarePermission(permissionName, permissionUsageCounter, algorithmDataDTO.getSimilarAppsPermissions().size())) {
+                messageBuilder.append(permissionName).append(" is rare. ");
+                scoreValue += evaluateRisk(permission, riskScoreRarePermissionMap, messageBuilder);
             }
         }
         return scoreValue;
@@ -85,12 +91,20 @@ public class ContrastWithSimilarAppsStep extends AbstractStep implements Algorit
         return false;
     }
 
-    private boolean isUniquePermission(String permissionName, Map<String, Integer> permissionUsageCounter) {
+    private boolean isUniquePermission(String permissionName, Map<String, Integer> permissionUsageCounter, int size) {
 
         Integer count = permissionUsageCounter.get(permissionName);
         if (count == null || count == 0) {
             return true;
         }
+
+        if (count != null) {
+            double rate = count.doubleValue() / (double) size;
+            if (0 < rate && rate <= rarePermissionBracket) {
+                return true;
+            }
+        }
+
         return false;
 
     }

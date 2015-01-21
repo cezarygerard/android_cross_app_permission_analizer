@@ -32,7 +32,7 @@ public class ContrastWithMarketVersionStep extends AbstractStep implements Algor
     @Override
     public RiskScore executeStep(AlgorithmDataDTO algorithmDataDTO) throws AlgorithmException {
         int scoreValue = 0;
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder().append("Comparing ith the same app in market. ");
 
         Set<String> permissionsFromStore = downloadPermissionsFromStore(algorithmDataDTO);
         ;
@@ -47,8 +47,9 @@ public class ContrastWithMarketVersionStep extends AbstractStep implements Algor
                 continue;
             }
             if (!permissionsFromStore.contains(permissionName)) {
-                scoreValue += evaluateRisk(permission, riskScoreMap);
-                stringBuilder.append(permissionName).append(" ; ");
+                stringBuilder.append(permissionName);
+                scoreValue += evaluateRisk(permission, riskScoreMap, stringBuilder);
+
             }
         }
 
@@ -57,11 +58,11 @@ public class ContrastWithMarketVersionStep extends AbstractStep implements Algor
 
     private RiskScore prepareResult(int scoreValue, StringBuilder stringBuilder) throws AlgorithmException {
 
-        String permissions = stringBuilder.toString();
-        if (StringUtils.isNotEmpty(permissions)) {
-            return riskScoreFactory.createRiskScoreWithMessage(scoreValue, "App uses some more permissions than declared in Google Play: " + permissions);
-        } else {
+        String message = stringBuilder.toString();
+        if (scoreValue==0) {
             return riskScoreFactory.createRiskScore(scoreValue);
+        } else {
+            return riskScoreFactory.createRiskScoreWithMessage(scoreValue, "App uses some more permissions than are NOT declared in Google Play. " + message);
         }
     }
 

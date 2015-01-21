@@ -19,7 +19,7 @@ public class GooglePlayCrawlerService {
 
     private static GooglePlayAPI service;
 
-    private static Map<String, Set<String>> cachedPermissionLists = new ConcurrentHashMap<>();
+    //private static Map<String, Set<String>> cachedPermissionLists = new ConcurrentHashMap<>();
     private final String password;
     private final String email;
 
@@ -38,26 +38,26 @@ public class GooglePlayCrawlerService {
 
     public Set<String> getPermissionsForPackage(String packageName) throws ServiceException {
 
-        if (cachedPermissionLists.containsKey(packageName)) {
-            return cachedPermissionLists.get(packageName);
-        }
+//        if (cachedPermissionLists.containsKey(packageName)) {
+//            return cachedPermissionLists.get(packageName);
+//        }
 
         GooglePlay.DetailsResponse details = null;
         try {
             details = service.details(packageName);
         } catch (IOException e) {
-            throw new ServiceException("downloading permissions failed for: " + packageName);
+            throw new ServiceException("downloading permissions failed for: " + packageName, e);
         }
         GooglePlay.AppDetails appDetails = details.getDocV2().getDetails().getAppDetails();
 
         Set<String> permissionsSet = new LinkedHashSet<>(appDetails.getPermissionList());
 
-        Set<String> previous = cachedPermissionLists.put(packageName, permissionsSet);
+        //Set<String> previous = cachedPermissionLists.put(packageName, permissionsSet);
 
-        if (previous != null) {
-            cachedPermissionLists.remove(packageName);
-            cachedPermissionLists.put(packageName, permissionsSet);
-        }
+//        if (previous != null) {
+//            cachedPermissionLists.remove(packageName);
+//            cachedPermissionLists.put(packageName, permissionsSet);
+//        }
 
         return permissionsSet;
     }

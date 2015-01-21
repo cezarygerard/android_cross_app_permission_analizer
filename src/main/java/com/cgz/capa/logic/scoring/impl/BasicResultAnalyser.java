@@ -37,7 +37,9 @@ public class BasicResultAnalyser implements ResultAnalyser {
             if (riskScore != null) {
                 finalScore += riskScore.getScore();
                 if(StringUtils.isNotEmpty(riskScore.getMessage())) {
+                    finalMessageStringBuilder.append( result.getRight().getClass().getName()).append(System.getProperty("line.separator"));
                     finalMessageStringBuilder.append(riskScore.getMessage()).append(System.getProperty("line.separator"));
+                    finalMessageStringBuilder.append(System.getProperty("line.separator"));
                 }
             }
 

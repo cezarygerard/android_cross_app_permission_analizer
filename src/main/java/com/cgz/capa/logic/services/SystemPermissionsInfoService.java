@@ -25,6 +25,8 @@ import java.util.Map;
  */
 public class SystemPermissionsInfoService {
 
+    //TODO take into account namespaces and its prefixes!
+
     private static final String PERMISSION_TAG_NAME = "permission";
     private static final String PERMISSION_GROUP_TAG_NAME = "permission-group";
     private static final String ANDROID_NAME_ATTR_NAME = "android:name";
@@ -48,12 +50,9 @@ public class SystemPermissionsInfoService {
     private void readCoreManifest() throws ServiceException {
         InputStream is = null;
         try {
-            URL url = new URL(coreManifestUri);
-            URLConnection conn = url.openConnection();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            is = conn.getInputStream();
-            Document manifestXmlDoc = builder.parse(is);
+            Document manifestXmlDoc = builder.parse(coreManifestUri);
             parseManifest(manifestXmlDoc);
         } catch (IOException | ParserConfigurationException | SAXException e) {
             throw new ServiceException(e);

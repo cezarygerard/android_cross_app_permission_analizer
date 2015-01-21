@@ -25,22 +25,27 @@ public abstract class AbstractStep {
     @Autowired
     protected GooglePlayCrawlerService googlePlayCrawlerService;
 
+    protected String WHITESPACE = " ";
+
     public abstract RiskScore executeStep(AlgorithmDataDTO algorithmDataDTO) throws AlgorithmException;
 
-    protected int evaluateRisk(Permission permission, Map<String, Integer> riskScoreMap) {
+    protected int evaluateRisk(Permission permission, Map<String, Integer> riskScoreMap, StringBuilder messageBuilder) {
 
         int score = 0;
-
+        messageBuilder.append(WHITESPACE).append(permission.getName()).append(WHITESPACE).append(permission.getProtectionLevel()).append(WHITESPACE);
         if (riskScoreMap.containsKey(permission.getProtectionLevel().getName())) {
             score += riskScoreMap.get(permission.getProtectionLevel().getName());
+            messageBuilder.append(riskScoreMap.get(permission.getProtectionLevel().getName())).append(WHITESPACE);
         }
 
         if (permissionsInfoService.costsMoney(permission)) {
             score += riskScoreMap.get("costsMoney");
+            messageBuilder.append("costsMoney").append(WHITESPACE).append(riskScoreMap.get("costsMoney")).append(WHITESPACE);
         }
 
         if (permissionsInfoService.usesPersonalInfo(permission)) {
             score += riskScoreMap.get("personalInfo");
+            messageBuilder.append("personalInfo").append(WHITESPACE).append(riskScoreMap.get("personalInfo")).append(WHITESPACE);
         }
 
         return score;

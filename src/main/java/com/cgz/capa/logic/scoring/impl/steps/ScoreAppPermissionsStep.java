@@ -27,20 +27,20 @@ public class ScoreAppPermissionsStep extends AbstractStep implements AlgorithmSt
     @Override
     public RiskScore executeStep(AlgorithmDataDTO algorithmDataDTO) throws AlgorithmException {
         int scoreValue = 0;
+
+        StringBuilder messageBuilder = new StringBuilder().append("Scoring app permissions. ");
+
         for (String permissionName : algorithmDataDTO.getManifestPermissions()) {
             Permission permission = permissionsInfoService.getPermission(permissionName);
             if (permission == null) {
                 //not a system permission
                 continue;
             }
-            scoreValue += evaluateRisk(permission, riskScoreMap);
+            scoreValue += evaluateRisk(permission, riskScoreMap, messageBuilder);
         }
-        try {
-            return riskScoreFactory.createRiskScore(scoreValue);
-        } catch (ServiceException e) {
-            logger.error("Creating RiskScore failed", e);
-            throw new AlgorithmException("Creating RiskScore failed", e);
-        }
+
+        return riskScoreFactory.createRiskScoreWithMessage(scoreValue, messageBuilder.toString());
+
     }
 
 

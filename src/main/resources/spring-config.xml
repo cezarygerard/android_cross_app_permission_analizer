@@ -102,6 +102,7 @@
             </map>
         </constructor-arg>
         <constructor-arg index="2" value="${contrastWithSimilarAppsStep.rarePermissionBracket}"/>
+        <constructor-arg index="3" value="${contrastWithSimilarAppsStep.uniquePermissionBracket}"/>
     </bean>
 
     <!--<bean id="RestController" class="com.cgz.capa.web.RestController"/>-->

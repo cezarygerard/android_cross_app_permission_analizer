@@ -19,6 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring-config.xml")
 public class PackageAnalysisAlgorithmTest {
@@ -47,7 +50,7 @@ public class PackageAnalysisAlgorithmTest {
 
     @Test
     public void testExecute() throws Exception {
-        List<Pair<RiskScore, AlgorithmStep>> results = algorithm.executeAnalysis("goldenshorestechnologies.brightestflashlight.free", new ArrayList<String>(permissionsSet), algorithmSteps);
+        List<Pair<RiskScore, AlgorithmStep>> results = algorithm.execute("goldenshorestechnologies.brightestflashlight.free", new ArrayList<String>(permissionsSet), algorithmSteps);
         analyser.analise(results);
         //TODO assert
 
@@ -57,7 +60,7 @@ public class PackageAnalysisAlgorithmTest {
     public void testExecuteWith() throws Exception {
         List<String> permList = new ArrayList<String>(permissionsSet);
         permList.add("android.permission.SEND_SMS");
-        List<Pair<RiskScore, AlgorithmStep>> results = algorithm.executeAnalysis("goldenshorestechnologies.brightestflashlight.free", permList, algorithmSteps);
+        List<Pair<RiskScore, AlgorithmStep>> results = algorithm.execute("goldenshorestechnologies.brightestflashlight.free", permList, algorithmSteps);
         analyser.analise(results);
 
         //TODO ASSERT
@@ -66,7 +69,9 @@ public class PackageAnalysisAlgorithmTest {
     @Test(expected = AlgorithmException.class)
     public void testExecuteAnalysisWhenNoSuchPackageInStore() throws Exception {
         String[] perms = {"android.permission.ACCESS_CHECKIN_PROPERTIES", "android.permission.READ_SMS"};
-        List<Pair<RiskScore, AlgorithmStep>> results = algorithm.executeAnalysis("lalala", Arrays.asList(perms), algorithmSteps);
+        List<Pair<RiskScore, AlgorithmStep>> results = algorithm.execute("lalala", Arrays.asList(perms), algorithmSteps);
         analyser.analise(results);
     }
+
+
 }
