@@ -108,7 +108,7 @@
     <!--<bean id="RestController" class="com.cgz.capa.web.RestController"/>-->
 
 
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" name="application.properties">
         <property name="locations">
             <list>
                 <value>classpath*:application.properties</value>

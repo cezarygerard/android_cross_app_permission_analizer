@@ -60,6 +60,6 @@ public class SystemPermissionsInfoServiceTests {
 
     }
 
-    //TODO zy flagi sa dobrze zwracane z enumow -- nowy test
+    //TODO czy flagi sa dobrze zwracane z enumow -- nowy test
 
 }

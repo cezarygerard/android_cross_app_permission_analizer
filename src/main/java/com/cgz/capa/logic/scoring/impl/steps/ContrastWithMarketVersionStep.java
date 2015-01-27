@@ -6,7 +6,6 @@ import com.cgz.capa.logic.scoring.interfaces.AlgorithmStep;
 import com.cgz.capa.model.Permission;
 import com.cgz.capa.model.RiskScore;
 import com.cgz.capa.utils.AlgorithmDataDTO;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +15,7 @@ import java.util.Set;
 /**
  * Created by czarek on 14/01/15.
  */
-public class ContrastWithMarketVersionStep extends AbstractStep implements AlgorithmStep {
+public class ContrastWithMarketVersionStep extends AbstractAlgorithmStep implements AlgorithmStep {
 
     private Logger logger = LoggerFactory.getLogger(ContrastWithMarketVersionStep.class);
 

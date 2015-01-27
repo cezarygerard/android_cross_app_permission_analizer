@@ -30,7 +30,7 @@ public class GooglePlayCrawlerService {
     }
 
     @PostConstruct
-    public void setupAnd() throws Exception {
+    public void setup() throws Exception {
         service = new GooglePlayAPI(email, password);
         service.checkin();
         service.login();

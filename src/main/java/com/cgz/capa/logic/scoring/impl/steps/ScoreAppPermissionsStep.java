@@ -1,7 +1,6 @@
 package com.cgz.capa.logic.scoring.impl.steps;
 
 import com.cgz.capa.exceptions.AlgorithmException;
-import com.cgz.capa.exceptions.ServiceException;
 import com.cgz.capa.logic.scoring.interfaces.AlgorithmStep;
 import com.cgz.capa.model.Permission;
 import com.cgz.capa.model.RiskScore;
@@ -14,7 +13,7 @@ import java.util.Map;
 /**
  * Created by czarek on 14/01/15.
  */
-public class ScoreAppPermissionsStep extends AbstractStep implements AlgorithmStep {
+public class ScoreAppPermissionsStep extends AbstractAlgorithmStep implements AlgorithmStep {
 
     private Logger logger = LoggerFactory.getLogger(ScoreAppPermissionsStep.class);
 

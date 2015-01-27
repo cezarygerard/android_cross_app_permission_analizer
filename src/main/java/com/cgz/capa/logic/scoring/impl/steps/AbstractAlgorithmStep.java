@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by czarek on 16/01/15.
  */
-public abstract class AbstractStep {
+public abstract class AbstractAlgorithmStep {
 
     @Autowired
     protected RiskScoreFactory riskScoreFactory;

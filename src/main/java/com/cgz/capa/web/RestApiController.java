@@ -20,6 +20,7 @@ import java.util.*;
 
 /**
 * Created by czarek on 17/01/15.
+ * TODO add some basic tests
 */
 @RestController
 @RequestMapping("/capa")

@@ -1,7 +1,6 @@
 package com.cgz.capa.logic.scoring.impl.steps;
 
 import com.cgz.capa.exceptions.AlgorithmException;
-import com.cgz.capa.exceptions.ServiceException;
 import com.cgz.capa.logic.scoring.interfaces.AlgorithmStep;
 import com.cgz.capa.logic.services.GooglePlayCrawlerService;
 import com.cgz.capa.logic.services.RiskScoreFactory;
@@ -21,7 +20,7 @@ import java.util.Set;
 /**
  * Created by czarek on 14/01/15.
  */
-public class ContrastWithSimilarAppsStep extends AbstractStep implements AlgorithmStep {
+public class ContrastWithSimilarAppsStep extends AbstractAlgorithmStep implements AlgorithmStep {
 
     private Logger logger = LoggerFactory.getLogger(ContrastWithSimilarAppsStep.class);
 
@@ -70,7 +69,7 @@ public class ContrastWithSimilarAppsStep extends AbstractStep implements Algorit
         Permission permission = permissionsInfoService.getPermission(permissionName);
         if (permission != null) {
             if (isUniquePermission(permissionName, permissionUsageCounter, algorithmDataDTO.getSimilarAppsPermissions().size())) {
-                messageBuilder.append(permissionName).append(" is unique. ");
+                messageBuilder.append(permissionName).append(" is unique. ") ;
                 scoreValue += evaluateRisk(permission, riskScoreUniquePermissionMap, messageBuilder);
             } else if (isItRarePermission(permissionName, permissionUsageCounter, algorithmDataDTO.getSimilarAppsPermissions().size())) {
                 messageBuilder.append(permissionName).append(" is rare. ");
