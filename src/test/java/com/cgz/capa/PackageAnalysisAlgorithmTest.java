@@ -38,7 +38,7 @@ public class PackageAnalysisAlgorithmTest {
     @Autowired
     private GooglePlayCrawlerService crawlerService;
 
-    private Set<String> permissionsSet;
+    private List<String> permissionsSet;
 
     @Before
     public void setUp() throws Exception {
