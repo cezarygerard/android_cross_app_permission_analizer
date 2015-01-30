@@ -33,7 +33,7 @@
 
     <bean id="AlgorithmExecutor" class="com.cgz.capa.logic.scoring.impl.BasicAlgorithmExecutor" autowire="constructor"/>
 
-    <bean id="ResultAnalyser" class="com.cgz.capa.logic.scoring.impl.BasicResultAnalyser" autowire="constructor"/>
+    <bean id="BasicResultAnalyser" class="com.cgz.capa.logic.scoring.impl.BasicResultAnalyser"/>
 
     <bean id="ScoreAppPermissionsStep" class="com.cgz.capa.logic.scoring.impl.steps.ScoreAppPermissionsStep">
         <constructor-arg index="0">
@@ -104,8 +104,6 @@
         <constructor-arg index="2" value="${contrastWithSimilarAppsStep.rarePermissionBracket}"/>
         <constructor-arg index="3" value="${contrastWithSimilarAppsStep.uniquePermissionBracket}"/>
     </bean>
-
-    <!--<bean id="RestController" class="com.cgz.capa.web.RestController"/>-->
 
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" name="application.properties">

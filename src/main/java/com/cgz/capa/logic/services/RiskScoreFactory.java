@@ -30,18 +30,18 @@ public class RiskScoreFactory {
         ranges.put(points.get(points.size() - 1), names.get(names.size() - 1));
     }
 
-    public RiskScore createRiskScore(int score) {
+    public RiskScore createRiskScore(double score) {
         return createRiskScoreWithMessage(score, "");
     }
 
-    public RiskScore createRiskScoreWithMessage(int score, String message) {
+    public RiskScore createRiskScoreWithMessage(double score, String message) {
         validateScore(score);
-        String name = ranges.floorEntry(score).getValue();
+        String name = ranges.floorEntry((int) Math.floor(score)).getValue();
         return new RiskScore(score, name, message);
     }
 
 
-    private void validateScore(int score) {
+    private void validateScore(double score) {
         if (score < MIN_SCORE) {
             throw new ServiceRuntimeException("Score must not be below " + MIN_SCORE);
         }

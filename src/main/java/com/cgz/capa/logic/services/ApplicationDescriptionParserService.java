@@ -5,16 +5,21 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
  * Created by czarek on 05/01/15.
  */
-public class ApplicationDescriptionParserService {
+public  class ApplicationDescriptionParserService extends AbstractCacheableService {
+
     //grep command equivalents:
     //grep -oh store/apps/developer?id=[^\"\&]* pageString
     //grep -oh store/apps/details?id=[^\"\&]* pageString
@@ -38,6 +43,10 @@ public class ApplicationDescriptionParserService {
     public List<String> getSimilarAppsPackageNames(String appPacketName) throws ServiceException {
         //TODO validate arg
 
+        if (cache.containsKey(appPacketName)) {
+            return cache.get(appPacketName);
+        }
+
         String url = prepareAppUrlInStore(appPacketName);
         try {
             Document doc = Jsoup.connect(url).get();
@@ -51,6 +60,7 @@ public class ApplicationDescriptionParserService {
                     similarAppsList.add(similarAppName);
                 }
             }
+            storeInCache(appPacketName, similarAppsList);
             return similarAppsList;
         } catch (IOException e) {
             throw new ServiceException(e);

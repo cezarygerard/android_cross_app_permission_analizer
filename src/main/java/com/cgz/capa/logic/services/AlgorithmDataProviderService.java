@@ -42,8 +42,8 @@ public class AlgorithmDataProviderService {
         try {
             List<String> similarAppNames = applicationDescriptionParserService.getSimilarAppsPackageNames(investigatedPackageName);
 
-            Map<String, Set<String>> similarAppsPermissionsFromStore = downloadPermissionsForAll(similarAppNames);
-            Set<String> investigateAppPermissionsFromStore = googlePlayCrawlerService.getPermissionsForPackage(investigatedPackageName);
+            Map<String, List<String>> similarAppsPermissionsFromStore = downloadPermissionsForAll(similarAppNames);
+            List<String> investigateAppPermissionsFromStore = googlePlayCrawlerService.getPermissionsForPackage(investigatedPackageName);
 
             List<String>deduplicateInvestigatedPackagePermissions = removeDuplicates(investigatedPackagePermissions);
             tuple = new AlgorithmDataDTO(investigatedPackageName, deduplicateInvestigatedPackagePermissions, investigateAppPermissionsFromStore, similarAppsPermissionsFromStore);
@@ -58,14 +58,14 @@ public class AlgorithmDataProviderService {
         return new ArrayList<>(new LinkedHashSet<>(investigatedPackagePermissions));
     }
 
-    protected Map<String, Set<String>> downloadPermissionsForAll(List<String> similarAppNames) {
-        Map<String, Set<String>> similarAppsPermissions = new HashMap<>();
+    protected Map<String, List<String>> downloadPermissionsForAll(List<String> similarAppNames) {
+        Map<String, List<String>> similarAppsPermissions = new HashMap<>();
         for (String appName : similarAppNames) {
             synchronized (this) {
 
-                Set<String> permSet  = downloadPermissionsInternal(appName, 0);
-                if(permSet!= null){
-                    similarAppsPermissions.put(appName, permSet);
+                List<String> ermissionsList  = downloadPermissionsInternal(appName, 0);
+                if(ermissionsList!= null){
+                    similarAppsPermissions.put(appName, ermissionsList);
                 } else {
                     logger.error("could not download permissions EVEN AFTER RETRYING");
                 }
@@ -74,11 +74,11 @@ public class AlgorithmDataProviderService {
         return similarAppsPermissions;
     }
 
-    public Set<String> downloadPermissionsInternal(String appName, int tries){
-        Set<String> permSet = null;
+    public List<String> downloadPermissionsInternal(String appName, int tries){
+        List<String> permissions = null;
         try {
-            permSet = googlePlayCrawlerService.getPermissionsForPackage(appName);
-            logger.info("Permission for package" + appName + " : " + permSet);
+            permissions = googlePlayCrawlerService.getPermissionsForPackage(appName);
+            logger.info("Permission for package" + appName + " : " + permissions);
         } catch (ServiceException e) {
             logger.error("could not download permissions for package, " +  appName +"   tried:  " + (tries + 1) + "  times" , e);
         }
@@ -89,7 +89,7 @@ public class AlgorithmDataProviderService {
             return null;
         }
 
-        if(permSet == null){
+        if(permissions == null){
 
             sleep(sleepTimeOnFailedDownloadInMilliseconds);
             return  downloadPermissionsInternal(appName, tries + 1);
@@ -97,7 +97,7 @@ public class AlgorithmDataProviderService {
 
 
         sleep(sleepTimeOnSuccessfulDownloadInMilliseconds);
-        return permSet;
+        return permissions;
     }
 
     private void sleep(long time) {

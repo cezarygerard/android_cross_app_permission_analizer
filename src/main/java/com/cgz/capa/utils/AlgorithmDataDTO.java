@@ -10,12 +10,12 @@ import java.util.Set;
 public class AlgorithmDataDTO {
     private final String name;
     private final List<String> manifestPermissions;
-    private final Set<String> storePermissions;
-    private final Map<String, Set<String>> similarAppsPermissions;
+    private final List<String> storePermissions;
+    private final Map<String, List<String>> similarAppsPermissions;
 
     /**
      */
-    public AlgorithmDataDTO(String name, List<String> manifestPermissions, Set<String> storePermissions, Map<String, Set<String>> similarAppsPermissions) {
+    public AlgorithmDataDTO(String name, List<String> manifestPermissions, List<String> storePermissions, Map<String, List<String>> similarAppsPermissions) {
         this.name = name;
         this.manifestPermissions = manifestPermissions;
         this.storePermissions = storePermissions;
@@ -30,11 +30,11 @@ public class AlgorithmDataDTO {
         return manifestPermissions;
     }
 
-    public Set<String> getStorePermissions() {
+    public List<String> getStorePermissions() {
         return storePermissions;
     }
 
-    public Map<String, Set<String>> getSimilarAppsPermissions() {
+    public Map<String, List<String>> getSimilarAppsPermissions() {
         return similarAppsPermissions;
     }
 }

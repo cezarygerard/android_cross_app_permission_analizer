@@ -9,6 +9,7 @@ import com.cgz.capa.utils.AlgorithmDataDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,7 +34,7 @@ public class ContrastWithMarketVersionStep extends AbstractAlgorithmStep impleme
         int scoreValue = 0;
         StringBuilder stringBuilder = new StringBuilder().append("Comparing ith the same app in market. ");
 
-        Set<String> permissionsFromStore = downloadPermissionsFromStore(algorithmDataDTO);
+        List<String> permissionsFromStore = downloadPermissionsFromStore(algorithmDataDTO);
         ;
         if (permissionsFromStore == null) {
                 return riskScoreFactory.createRiskScoreWithMessage(appNotFoundScore, "App was not found in store");
@@ -65,7 +66,7 @@ public class ContrastWithMarketVersionStep extends AbstractAlgorithmStep impleme
         }
     }
 
-    private Set<String> downloadPermissionsFromStore(AlgorithmDataDTO algorithmDataDTO) throws AlgorithmException {
+    private List<String> downloadPermissionsFromStore(AlgorithmDataDTO algorithmDataDTO) throws AlgorithmException {
 
         try {
             return googlePlayCrawlerService.getPermissionsForPackage(algorithmDataDTO.getName());

@@ -5,17 +5,17 @@ package com.cgz.capa.model;
  */
 public class RiskScore {
 
-    private int score;
+    private double score;
     private String name;
     private String message;
 
-    public RiskScore(int score, String name, String message) {
+    public RiskScore(double score, String name, String message) {
         this.score = score;
         this.name = name;
         this.message = message;
     }
 
-    public int getScore() {
+    public double getScore() {
         return score;
     }
 

@@ -13,8 +13,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
@@ -31,7 +33,7 @@ public class RestApiController {
     @Autowired
     private AlgorithmExecutor algorithm;
 
-    @Autowired
+    @Resource(name="BasicResultAnalyser")
     private ResultAnalyser analyser;
 
     @Autowired
@@ -48,7 +50,7 @@ public class RestApiController {
     @ResponseBody
     RiskScore analiseFromStore(@RequestParam(value = "packageName", required = true) String packageName, HttpServletResponse response)  {
         try {
-            Set<String> permissionsForPackage = crawlerService.getPermissionsForPackage(packageName);
+            List<String> permissionsForPackage = crawlerService.getPermissionsForPackage(packageName);
             List<Pair<RiskScore, AlgorithmStep>> results = algorithm.executeAllSteps(packageName, new ArrayList<String>(permissionsForPackage));
             return analyser.analise(results);
         } catch (ServiceException | AlgorithmException e) {

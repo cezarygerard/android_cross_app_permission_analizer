@@ -12,10 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by czarek on 14/01/15.
@@ -108,14 +105,14 @@ public class ContrastWithSimilarAppsStep extends AbstractAlgorithmStep implement
 
     }
 
-    public Map<String, Integer> buildPermissionUsageCounter(Map<String, Set<String>> similarAppsPermissions) {
+    public Map<String, Integer> buildPermissionUsageCounter(Map<String, List<String>> similarAppsPermissions) {
 
         Map<String, Integer> permissionUsageCounter = new HashMap<>();
 
         Iterator<String> nameIterator = similarAppsPermissions.keySet().iterator();
         while (nameIterator.hasNext()) {
             String appName = nameIterator.next();
-            Set<String> setOfPermissions = similarAppsPermissions.get(appName);
+            List<String> setOfPermissions = similarAppsPermissions.get(appName);
             Iterator<String> permIterator = setOfPermissions.iterator();
             while (permIterator.hasNext()) {
                 String permName = permIterator.next();
