@@ -1,6 +1,5 @@
-package com.cgz.capa;
+package com.cgz.capa.logic.services;
 
-import com.cgz.capa.logic.services.RiskScoreFactory;
 import com.cgz.capa.model.RiskScore;
 import org.junit.Test;
 import org.junit.runner.RunWith;

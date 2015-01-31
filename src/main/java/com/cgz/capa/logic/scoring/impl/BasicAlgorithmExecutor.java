@@ -2,10 +2,9 @@ package com.cgz.capa.logic.scoring.impl;
 
 
 import com.cgz.capa.exceptions.AlgorithmException;
-import com.cgz.capa.exceptions.ServiceException;
 import com.cgz.capa.logic.scoring.interfaces.AlgorithmExecutor;
 import com.cgz.capa.logic.scoring.interfaces.AlgorithmStep;
-import com.cgz.capa.logic.services.*;
+import com.cgz.capa.logic.services.AlgorithmDataProviderService;
 import com.cgz.capa.model.RiskScore;
 import com.cgz.capa.utils.AlgorithmDataDTO;
 import org.apache.commons.lang3.tuple.Pair;
@@ -13,7 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by czarek on 11/01/15.

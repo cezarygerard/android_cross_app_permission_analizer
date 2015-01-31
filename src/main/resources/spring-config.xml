@@ -35,6 +35,18 @@
 
     <bean id="BasicResultAnalyser" class="com.cgz.capa.logic.scoring.impl.BasicResultAnalyser"/>
 
+    <bean id="WeightedResultAnalyser" class="com.cgz.capa.logic.scoring.impl.WeightedResultAnalyser">
+        <property name="weights">
+            <map>
+                <entry key-ref="ScoreAppPermissionsStep" value="${WeightedResultAnalyser.weight.scoreAppPermissions}"/>
+                <entry key-ref="ContrastWithMarketVersionStep" value="${WeightedResultAnalyser.weight.contrastWithMarket}"/>
+                <entry key-ref="ContrastWithSimilarAppsStep" value="${WeightedResultAnalyser.weight.contrastWithSimilarAppsStep}"/>
+            </map>
+        </property>
+    </bean>
+
+
+
     <bean id="ScoreAppPermissionsStep" class="com.cgz.capa.logic.scoring.impl.steps.ScoreAppPermissionsStep">
         <constructor-arg index="0">
             <map>

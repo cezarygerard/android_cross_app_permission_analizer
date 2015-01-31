@@ -1,6 +1,5 @@
-package com.cgz.capa;
+package com.cgz.capa.logic.services;
 
-import com.cgz.capa.logic.services.SystemPermissionsInfoService;
 import com.cgz.capa.model.Permission;
 import com.cgz.capa.model.PermissionGroup;
 import com.cgz.capa.model.enums.PermissionFlag;

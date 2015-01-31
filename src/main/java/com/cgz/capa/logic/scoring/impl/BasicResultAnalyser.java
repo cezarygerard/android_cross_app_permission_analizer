@@ -34,7 +34,7 @@ public class BasicResultAnalyser implements ResultAnalyser {
 
             RiskScore riskScore = result.getLeft();
             if (riskScore != null) {
-                finalScore += executeAnalysis(finalScore, result);
+                finalScore += executeAnalysisForOneResult(finalScore, result);
                 appendMessage(finalMessageStringBuilder, result, riskScore);
             }
 
@@ -46,7 +46,7 @@ public class BasicResultAnalyser implements ResultAnalyser {
 
     }
 
-    protected double executeAnalysis(double finalScore, Pair<RiskScore, AlgorithmStep> result) {
+    protected double executeAnalysisForOneResult(double finalScore, Pair<RiskScore, AlgorithmStep> result) {
         return result.getLeft().getScore();
     }
 
@@ -63,4 +63,6 @@ public class BasicResultAnalyser implements ResultAnalyser {
             finalMessageStringBuilder.append(System.getProperty("line.separator"));
         }
     }
+
+
 }

@@ -23,9 +23,9 @@ public class AlgorithmDataProviderService {
     @Value("${algorithmDataProviderService.maxRetriesWhenDownloadingAppPermission}")
     public   long maxRetriesWhenDownloadingAppPermission = 0;
     @Value("${algorithmDataProviderService.sleepTimeOnFailedDownloadInMilliseconds}")
-    public   long sleepTimeOnFailedDownloadInMilliseconds = 30000;
+    public   long sleepTimeOnFailedDownloadInMilliseconds = 0;
     @Value("${algorithmDataProviderService.sleepTimeOnSuccessfulDownloadInMilliseconds}")
-    public   long sleepTimeOnSuccessfulDownloadInMilliseconds = 1000;
+    public   long sleepTimeOnSuccessfulDownloadInMilliseconds = 0;
 
     @Autowired
     protected ApplicationDescriptionParserService applicationDescriptionParserService;

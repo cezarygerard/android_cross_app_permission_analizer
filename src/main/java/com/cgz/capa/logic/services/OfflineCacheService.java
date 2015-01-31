@@ -1,14 +1,14 @@
 package com.cgz.capa.logic.services;
 
-import com.cgz.capa.exceptions.ServiceException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.beans.XMLDecoder;
-import java.beans.XMLEncoder;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by czarek on 28/01/15.
@@ -16,12 +16,15 @@ import java.io.*;
 @Service
 public class OfflineCacheService {
 
+
+    String cacheDir = "";//System.getProperty("java.io.tmpdir");;
+
     Logger logger = LoggerFactory.getLogger(AlgorithmDataProviderService.class);
 
     public <T> void cacheAll(String cacheName, T cache)   {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            mapper.writeValue(new File(cacheName + ".json"), cache);
+            mapper.writeValue(new File(cacheDir + File.separator + cacheName + ".json"), cache);
 
         } catch (Exception e) {
             logger.error("Could not write cache", e);
@@ -33,15 +36,12 @@ public class OfflineCacheService {
         T result = null;
 
         try {
-             result = mapper.readValue(new File(cacheName + ".json"), type);
+             result = mapper.readValue(new File(cacheDir + File.separator + cacheName + ".json"), type);
         } catch (IOException e) {
            return null;
         }
 
         return result;
     }
-
-
-
 
 }

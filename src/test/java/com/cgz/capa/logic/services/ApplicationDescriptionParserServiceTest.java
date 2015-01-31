@@ -1,6 +1,5 @@
-package com.cgz.capa;
+package com.cgz.capa.logic.services;
 
-import com.cgz.capa.logic.services.ApplicationDescriptionParserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
