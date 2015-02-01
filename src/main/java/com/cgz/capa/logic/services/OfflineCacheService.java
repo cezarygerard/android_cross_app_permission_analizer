@@ -17,14 +17,14 @@ import java.io.IOException;
 public class OfflineCacheService {
 
 
-    String cacheDir = "";//System.getProperty("java.io.tmpdir");;
+    String cacheDir = "." + File.separator;//System.getProperty("java.io.tmpdir") +  File.separator;;
 
     Logger logger = LoggerFactory.getLogger(AlgorithmDataProviderService.class);
 
     public <T> void cacheAll(String cacheName, T cache)   {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            mapper.writeValue(new File(cacheDir + File.separator + cacheName + ".json"), cache);
+            mapper.writeValue(new File(cacheDir  + cacheName + ".json"), cache);
 
         } catch (Exception e) {
             logger.error("Could not write cache", e);
@@ -36,7 +36,7 @@ public class OfflineCacheService {
         T result = null;
 
         try {
-             result = mapper.readValue(new File(cacheDir + File.separator + cacheName + ".json"), type);
+             result = mapper.readValue(new File(cacheDir  + cacheName + ".json"), type);
         } catch (IOException e) {
            return null;
         }

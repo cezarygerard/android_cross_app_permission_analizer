@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * Created by czarek on 14/01/15.
  */
-public class ContrastWithSimilarAppsStep extends AbstractAlgorithmStep implements AlgorithmStep {
+public class ContrastWithSimilarAppsStep extends AbstractAlgorithmStep  {
 
     private Logger logger = LoggerFactory.getLogger(ContrastWithSimilarAppsStep.class);
 
@@ -30,23 +30,24 @@ public class ContrastWithSimilarAppsStep extends AbstractAlgorithmStep implement
     @Autowired
     protected SystemPermissionsInfoService permissionsInfoService;
 
-    @Autowired
-    protected GooglePlayCrawlerService googlePlayCrawlerService;
-
     protected double rarePermissionBracket;
 
     protected double uniquePermissionBracket;
 
-    protected Map<String, Integer> riskScoreUniquePermissionMap;
+    protected double uniquePermissionPenaltyRatio;
 
-    protected Map<String, Integer> riskScoreRarePermissionMap;
+    public ContrastWithSimilarAppsStep(Map<String, Integer> riskScoreMap, double rarePermissionBracket, double uniquePermissionBracket, double uniquePermissionPenaltyRatio) {
+        this(rarePermissionBracket,uniquePermissionBracket,uniquePermissionPenaltyRatio);
+        this.riskScoreMap = riskScoreMap;
+    }
 
-    public ContrastWithSimilarAppsStep(Map<String, Integer> riskScoreUniquePermissionMap, Map<String, Integer> riskScoreRarePermissionMap, double rarePermissionBracket, double uniquePermissionBracket) {
+    protected  ContrastWithSimilarAppsStep(double rarePermissionBracket, double uniquePermissionBracket, double uniquePermissionPenaltyRatio) {
         this.rarePermissionBracket = rarePermissionBracket;
         this.uniquePermissionBracket = uniquePermissionBracket;
-        this.riskScoreUniquePermissionMap = riskScoreUniquePermissionMap;
-        this.riskScoreRarePermissionMap = riskScoreRarePermissionMap;
+        this.uniquePermissionPenaltyRatio = uniquePermissionPenaltyRatio;
     }
+
+
 
     @Override
     public RiskScore executeStep(AlgorithmDataDTO algorithmDataDTO) throws AlgorithmException {
@@ -70,10 +71,10 @@ public class ContrastWithSimilarAppsStep extends AbstractAlgorithmStep implement
         if (permission != null) {
             if (isUniquePermission(permissionName, permissionUsageCounter, algorithmDataDTO.getSimilarAppsPermissions().size())) {
                 messageBuilder.append(permissionName).append(" is unique. ") ;
-                scoreValue += evaluateRisk(permission, riskScoreUniquePermissionMap, messageBuilder);
+                scoreValue += uniquePermissionPenaltyRatio * evaluateRisk(permission, messageBuilder);
             } else if (isItRarePermission(permissionName, permissionUsageCounter, algorithmDataDTO.getSimilarAppsPermissions().size())) {
                 messageBuilder.append(permissionName).append(" is rare. ");
-                scoreValue += evaluateRisk(permission, riskScoreRarePermissionMap, messageBuilder);
+                scoreValue += evaluateRisk(permission,  messageBuilder);
             }
         }
         return scoreValue;

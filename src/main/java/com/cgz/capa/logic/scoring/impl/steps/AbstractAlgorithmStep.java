@@ -1,6 +1,7 @@
 package com.cgz.capa.logic.scoring.impl.steps;
 
 import com.cgz.capa.exceptions.AlgorithmException;
+import com.cgz.capa.logic.scoring.interfaces.AlgorithmStep;
 import com.cgz.capa.logic.services.GooglePlayCrawlerService;
 import com.cgz.capa.logic.services.RiskScoreFactory;
 import com.cgz.capa.logic.services.SystemPermissionsInfoService;
@@ -14,7 +15,7 @@ import java.util.Map;
 /**
  * Created by czarek on 16/01/15.
  */
-public abstract class AbstractAlgorithmStep {
+public abstract class AbstractAlgorithmStep implements AlgorithmStep {
 
     @Autowired
     protected RiskScoreFactory riskScoreFactory;
@@ -28,6 +29,12 @@ public abstract class AbstractAlgorithmStep {
     protected String WHITESPACE = " ";
 
     public abstract RiskScore executeStep(AlgorithmDataDTO algorithmDataDTO) throws AlgorithmException;
+
+    protected Map<String, Integer> riskScoreMap;
+
+    protected int evaluateRisk(Permission permission , StringBuilder messageBuilder) {
+        return evaluateRisk(permission, this.riskScoreMap, messageBuilder);
+    }
 
     protected int evaluateRisk(Permission permission, Map<String, Integer> riskScoreMap, StringBuilder messageBuilder) {
 

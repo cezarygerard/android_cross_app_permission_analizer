@@ -15,13 +15,11 @@ import java.util.Map;
 /**
  * Created by czarek on 14/01/15.
  */
-public class ContrastWithMarketVersionStep extends AbstractAlgorithmStep implements AlgorithmStep {
+public class ContrastWithMarketVersionStep extends AbstractAlgorithmStep   {
 
     private Logger logger = LoggerFactory.getLogger(ContrastWithMarketVersionStep.class);
 
     protected int appNotFoundScore;
-
-    protected Map<String, Integer> riskScoreMap;
 
     public ContrastWithMarketVersionStep(final Map<String, Integer> riskScoreMap, final int appNotFoundScore) {
         this.riskScoreMap = riskScoreMap;
@@ -47,7 +45,7 @@ public class ContrastWithMarketVersionStep extends AbstractAlgorithmStep impleme
             }
             if (!permissionsFromStore.contains(permissionName)) {
                 stringBuilder.append(permissionName);
-                scoreValue += evaluateRisk(permission, riskScoreMap, stringBuilder);
+                scoreValue += evaluateRisk(permission, stringBuilder);
 
             }
         }

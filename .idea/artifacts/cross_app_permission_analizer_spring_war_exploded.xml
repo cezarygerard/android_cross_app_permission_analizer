@@ -17,7 +17,7 @@
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-log4j12:1.7.2" />
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.2" />
           <element id="library" level="project" name="Maven: log4j:log4j:1.2.17" />
-          <element id="library" level="project" name="Maven: com.akdeniz:googleplaycrawler:0.3-SNAPSHOT" />
+          <element id="library" level="project" name="Maven: com.akdeniz:googleplaycrawler:0.3.1" />
           <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpclient:4.2.2" />
           <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.6" />
           <element id="library" level="project" name="Maven: net.sourceforge.argparse4j:argparse4j:0.2.2" />

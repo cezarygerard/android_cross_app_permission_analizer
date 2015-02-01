@@ -15,6 +15,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -50,7 +51,8 @@ public class SystemPermissionsInfoService {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document manifestXmlDoc = builder.parse(coreManifestUri);
+            is = getClass().getClassLoader().getResourceAsStream(coreManifestUri);
+            Document manifestXmlDoc = builder.parse(is);
             parseManifest(manifestXmlDoc);
         } catch (IOException | ParserConfigurationException | SAXException e) {
             throw new ServiceException(e);

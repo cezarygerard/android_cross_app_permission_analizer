@@ -20,7 +20,6 @@ public abstract class AbstractCacheableService {
 
     @PostConstruct
     public void setup() throws Exception {
-
         Map<String, List<String>> cashed = offlineCacheService.readCache(this.getClass().getSimpleName(), cache.getClass());
         if(cashed!=null) {
             cache.putAll(cashed);
@@ -28,8 +27,10 @@ public abstract class AbstractCacheableService {
     }
 
     //TODO extrac abstract superclass with GooglePlayCrawlerService;
-    protected void storeInCache(String packageName, List<String> permissionsSet) throws ServiceException {
-        cache.put(packageName, permissionsSet);
-        offlineCacheService.cacheAll(this.getClass().getSimpleName(),cache );
+    protected void storeInCache(String packageName, List<String> data) throws ServiceException {
+        List<String> previous  = cache.put(packageName, data);
+        if(previous == null) {
+            offlineCacheService.cacheAll(this.getClass().getSimpleName(), cache);
+        }
     }
 }

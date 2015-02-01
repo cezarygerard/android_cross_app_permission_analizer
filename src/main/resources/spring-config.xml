@@ -21,11 +21,6 @@
                 value="${applicationDescription.googlePlayUri}"/>
     </bean>
 
-    <bean id="GooglePlayCrawlerService" class="com.cgz.capa.logic.services.GooglePlayCrawlerService" scope="singleton">
-        <constructor-arg index="0" value="${crawler.email}"/>
-        <constructor-arg index="1" value="${crawler.password}"/>
-    </bean>
-
     <bean id="RiskScoreFactory" class="com.cgz.capa.logic.services.RiskScoreFactory">
         <constructor-arg index="0" value="${riskScore.names}"/>
         <constructor-arg index="1" value="${riskScore.points}"/>
@@ -41,6 +36,8 @@
                 <entry key-ref="ScoreAppPermissionsStep" value="${WeightedResultAnalyser.weight.scoreAppPermissions}"/>
                 <entry key-ref="ContrastWithMarketVersionStep" value="${WeightedResultAnalyser.weight.contrastWithMarket}"/>
                 <entry key-ref="ContrastWithSimilarAppsStep" value="${WeightedResultAnalyser.weight.contrastWithSimilarAppsStep}"/>
+                <!--<entry key-ref="ScorePopularMalwarePermissionsStep" value="${WeightedResultAnalyser.weight.ScorePopularMalwarePermissionsStep}"/>-->
+                <!--<entry key-ref="ContrastWithSimilarAppsPopularMalwarePermissionsStep" value="${WeightedResultAnalyser.weight.ContrastWithSimilarAppsPopularMalwarePermissionsStep}"/>-->
             </map>
         </property>
     </bean>
@@ -97,31 +94,46 @@
                        value="${contrastWithSimilarAppsStep.uniquePermissionInSimilarApps.permissionGroup.flag.personalInfo}"/>
             </map>
         </constructor-arg>
-        <constructor-arg index="1">
-            <map>
-                <entry key="costsMoney"
-                       value="${contrastWithSimilarAppsStep.rarePermissionInSimilarApps.flag.costs.money}"/>
-                <entry key="normal"
-                       value="${contrastWithSimilarAppsStep.rarePermissionInSimilarApps.protectionLevel.normal}"/>
-                <entry key="dangerous"
-                       value="${contrastWithSimilarAppsStep.rarePermissionInSimilarApps.protectionLevel.dangerous}"/>
-                <entry key="signature"
-                       value="${contrastWithSimilarAppsStep.rarePermissionInSimilarApps.protectionLevel.signature}"/>
-                <entry key="signature|System"
-                       value="${contrastWithSimilarAppsStep.rarePermissionInSimilarApps.protectionLevel.signatureOrSystem}"/>
-                <entry key="personalInfo"
-                       value="${contrastWithSimilarAppsStep.rarePermissionInSimilarApps.permissionGroup.flag.personalInfo}"/>
-            </map>
-        </constructor-arg>
-        <constructor-arg index="2" value="${contrastWithSimilarAppsStep.rarePermissionBracket}"/>
-        <constructor-arg index="3" value="${contrastWithSimilarAppsStep.uniquePermissionBracket}"/>
+
+        <constructor-arg index="1" value="${contrastWithSimilarAppsStep.rarePermissionBracket}"/>
+        <constructor-arg index="2" value="${contrastWithSimilarAppsStep.uniquePermissionBracket}"/>
+        <constructor-arg index="3" value="${contrastWithSimilarAppsStep.uniquePermissionPenaltyRatio}"/>
     </bean>
 
+
+    <bean id="ContrastWithSimilarAppsPopularMalwarePermissionsStep" class="com.cgz.capa.logic.scoring.impl.steps.ContrastWithSimilarAppsPopularMalwarePermissionsStep">
+        <constructor-arg index="0" value="${contrastWithSimilarAppsStep.rarePermissionBracket}"/>
+        <constructor-arg index="1" value="${contrastWithSimilarAppsStep.uniquePermissionBracket}"/>
+        <constructor-arg index="2" value="${contrastWithSimilarAppsStep.uniquePermissionPenaltyRatio}"/>
+        <constructor-arg index="3">
+            <bean class="com.cgz.capa.logic.scoring.impl.steps.ScorePopularMalwarePermissionsDelegate">
+                <constructor-arg value="ContrastWithSimilarAppsPopularMalwarePermissionsStep.riskyPermission."/>
+                <constructor-arg ref="applicationPropertiesService"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <bean id="ScorePopularMalwarePermissionsStep" class="com.cgz.capa.logic.scoring.impl.steps.ScorePopularMalwarePermissionsStep">
+        <constructor-arg>
+            <bean class="com.cgz.capa.logic.scoring.impl.steps.ScorePopularMalwarePermissionsDelegate">
+                <constructor-arg value="ScorePopularMalwarePermissionsStep.riskyPermission."/>
+                <constructor-arg ref="applicationPropertiesService"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+
+
+    <bean id="ApplicationPropertiesResource" class="org.springframework.core.io.ClassPathResource">
+        <constructor-arg value="application.properties"/>
+    </bean>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" name="application.properties">
         <property name="locations">
             <list>
-                <value>classpath*:application.properties</value>
+                <!--<value>classpath*:application.properties</value>-->
+                <!--<value>   <ref bean="ApplicationPopertyiesFile"/></value>-->
+                <ref bean="ApplicationPropertiesResource"/>
             </list>
         </property>
         <property name="ignoreResourceNotFound" value="false"/>
@@ -130,9 +142,6 @@
 
     <util:list id="algorithmSteps" list-class="java.util.ArrayList"
                value-type="com.cgz.capa.logic.scoring.interfaces.AlgorithmStep">
-        <ref bean="ScoreAppPermissionsStep"/>
-        <ref bean="ContrastWithMarketVersionStep"/>
-        <ref bean="ContrastWithSimilarAppsStep"/>
     </util:list>
 
 

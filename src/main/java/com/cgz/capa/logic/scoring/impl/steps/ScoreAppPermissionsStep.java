@@ -13,14 +13,16 @@ import java.util.Map;
 /**
  * Created by czarek on 14/01/15.
  */
-public class ScoreAppPermissionsStep extends AbstractAlgorithmStep implements AlgorithmStep {
+public class ScoreAppPermissionsStep extends AbstractAlgorithmStep   {
 
     private Logger logger = LoggerFactory.getLogger(ScoreAppPermissionsStep.class);
 
-    protected Map<String, Integer> riskScoreMap;
-
     public ScoreAppPermissionsStep(final Map<String, Integer> riskScoreMap) {
         this.riskScoreMap = riskScoreMap;
+    }
+
+    protected ScoreAppPermissionsStep(){
+        super();
     }
 
     @Override
@@ -35,7 +37,7 @@ public class ScoreAppPermissionsStep extends AbstractAlgorithmStep implements Al
                 //not a system permission
                 continue;
             }
-            scoreValue += evaluateRisk(permission, riskScoreMap, messageBuilder);
+            scoreValue += evaluateRisk(permission, messageBuilder);
         }
 
         return riskScoreFactory.createRiskScoreWithMessage(scoreValue, messageBuilder.toString());

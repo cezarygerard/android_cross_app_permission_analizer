@@ -20,12 +20,7 @@ public class AlgorithmDataProviderService {
 
     Logger logger = LoggerFactory.getLogger(AlgorithmDataProviderService.class);
 
-    @Value("${algorithmDataProviderService.maxRetriesWhenDownloadingAppPermission}")
-    public   long maxRetriesWhenDownloadingAppPermission = 0;
-    @Value("${algorithmDataProviderService.sleepTimeOnFailedDownloadInMilliseconds}")
-    public   long sleepTimeOnFailedDownloadInMilliseconds = 0;
-    @Value("${algorithmDataProviderService.sleepTimeOnSuccessfulDownloadInMilliseconds}")
-    public   long sleepTimeOnSuccessfulDownloadInMilliseconds = 0;
+
 
     @Autowired
     protected ApplicationDescriptionParserService applicationDescriptionParserService;
@@ -63,49 +58,19 @@ public class AlgorithmDataProviderService {
         for (String appName : similarAppNames) {
             synchronized (this) {
 
-                List<String> ermissionsList  = downloadPermissionsInternal(appName, 0);
-                if(ermissionsList!= null){
-                    similarAppsPermissions.put(appName, ermissionsList);
-                } else {
-                    logger.error("could not download permissions EVEN AFTER RETRYING");
+                List<String> permissionsList  = null;
+                try {
+                    permissionsList = googlePlayCrawlerService.getPermissionsForPackage(appName);
+                } catch (ServiceException e) {
+                    logger.error("could not download permissions", e);
                 }
+
+                similarAppsPermissions.put(appName, permissionsList);
             }
         }
         return similarAppsPermissions;
     }
 
-    public List<String> downloadPermissionsInternal(String appName, int tries){
-        List<String> permissions = null;
-        try {
-            permissions = googlePlayCrawlerService.getPermissionsForPackage(appName);
-            logger.info("Permission for package" + appName + " : " + permissions);
-        } catch (ServiceException e) {
-            logger.error("could not download permissions for package, " +  appName +"   tried:  " + (tries + 1) + "  times" , e);
-        }
 
-        //TODO consider moving this retry logic into  googlePlayCrawlerService
-
-        if(tries > maxRetriesWhenDownloadingAppPermission){
-            return null;
-        }
-
-        if(permissions == null){
-
-            sleep(sleepTimeOnFailedDownloadInMilliseconds);
-            return  downloadPermissionsInternal(appName, tries + 1);
-        }
-
-
-        sleep(sleepTimeOnSuccessfulDownloadInMilliseconds);
-        return permissions;
-    }
-
-    private void sleep(long time) {
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-            logger.error("ops! ",e);
-        }
-    }
 
 }
