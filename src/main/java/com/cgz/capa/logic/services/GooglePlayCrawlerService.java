@@ -96,10 +96,11 @@ public class GooglePlayCrawlerService extends AbstractCacheableService {
 
     public List<String> getPermissionsForPackage(String packageName) throws ServiceException {
         if (cache.containsKey(packageName)) {
-            logger.info("Permission for package" + packageName + " : " +  cache.get(packageName));
+            logger.info("Permissions from cache...");
+            logger.info("Permissions for package" + packageName + " : " +  cache.get(packageName));
             return cache.get(packageName);
         }
-
+        logger.info("Permission NOT from cache...");
         return getPermissionsForPackageInternal(packageName,0);
     }
 
