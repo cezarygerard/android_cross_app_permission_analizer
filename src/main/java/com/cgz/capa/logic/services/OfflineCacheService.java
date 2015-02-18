@@ -17,6 +17,7 @@ import java.io.IOException;
 public class OfflineCacheService {
 
 
+    private static final long MAX_SAVE_FREQUENCY = 30 * 1000;
     String cacheDir = "." + File.separator;//System.getProperty("java.io.tmpdir") +  File.separator;;
 
     Logger logger = LoggerFactory.getLogger(AlgorithmDataProviderService.class);
@@ -24,7 +25,10 @@ public class OfflineCacheService {
     public <T> void cacheAll(String cacheName, T cache)   {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            mapper.writeValue(new File(cacheDir  + cacheName + ".json"), cache);
+            File file = new File(cacheDir  + cacheName + ".json");
+            if(System.currentTimeMillis() > file.lastModified() + MAX_SAVE_FREQUENCY) {
+                mapper.writeValue(file, cache);
+            }
 
         } catch (Exception e) {
             logger.error("Could not write cache", e);

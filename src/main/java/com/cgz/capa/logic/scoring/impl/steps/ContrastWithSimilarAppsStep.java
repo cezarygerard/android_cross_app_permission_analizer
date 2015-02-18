@@ -100,7 +100,7 @@ public class ContrastWithSimilarAppsStep extends AbstractAlgorithmStep  {
 
         if (count != null) {
             double rate = count.doubleValue() / (double) size;
-            if (0 < rate && rate <= rarePermissionBracket) {
+            if (0 < rate && rate <= uniquePermissionBracket) {
                 return true;
             }
         }

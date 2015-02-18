@@ -17,6 +17,7 @@ import java.util.Map;
  */
 public class ContrastWithMarketVersionStep extends AbstractAlgorithmStep   {
 
+    public static final String MESSAGE_PREFIX = "Comparing ith the same app in market. ";
     private Logger logger = LoggerFactory.getLogger(ContrastWithMarketVersionStep.class);
 
     protected int appNotFoundScore;
@@ -29,7 +30,7 @@ public class ContrastWithMarketVersionStep extends AbstractAlgorithmStep   {
     @Override
     public RiskScore executeStep(AlgorithmDataDTO algorithmDataDTO) throws AlgorithmException {
         int scoreValue = 0;
-        StringBuilder stringBuilder = new StringBuilder().append("Comparing ith the same app in market. ");
+        StringBuilder stringBuilder = new StringBuilder().append(MESSAGE_PREFIX);
 
         List<String> permissionsFromStore = downloadPermissionsFromStore(algorithmDataDTO);
         ;
@@ -56,8 +57,8 @@ public class ContrastWithMarketVersionStep extends AbstractAlgorithmStep   {
     private RiskScore prepareResult(int scoreValue, StringBuilder stringBuilder) throws AlgorithmException {
 
         String message = stringBuilder.toString();
-        if (scoreValue==0) {
-            return riskScoreFactory.createRiskScore(scoreValue);
+        if (message.equals(MESSAGE_PREFIX)) {
+            return riskScoreFactory.createRiskScoreWithMessage(scoreValue, "App uses no more permissions than its version from store");
         } else {
             return riskScoreFactory.createRiskScoreWithMessage(scoreValue, "App uses some more permissions than are NOT declared in Google Play. " + message);
         }

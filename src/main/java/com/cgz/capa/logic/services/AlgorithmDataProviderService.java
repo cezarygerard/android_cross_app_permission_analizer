@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 /**
@@ -16,11 +17,30 @@ import java.util.*;
  *  * TODO implement offline (persistance) cache, so it will be possible to rerun the same analisis offline (with new params)
  */
 @Service
-public class AlgorithmDataProviderService {
+public class AlgorithmDataProviderService  {
 
     Logger logger = LoggerFactory.getLogger(AlgorithmDataProviderService.class);
 
+    @Autowired
+    private OfflineCacheService offlineCacheService;
 
+    Set<String> cacheOfErrors = new HashSet<>();
+
+
+    @PostConstruct
+    public void setup() throws Exception {
+        Set<String> cashed = offlineCacheService.readCache(this.getClass().getSimpleName(), cacheOfErrors.getClass());
+        if(cashed!=null) {
+            cacheOfErrors.addAll(cashed);
+        }
+    }
+
+    protected void storeInCache(String value) throws ServiceException {
+        boolean newValue  = cacheOfErrors.add(value);
+        if(newValue) {
+            offlineCacheService.cacheAll(this.getClass().getSimpleName(), cacheOfErrors);
+        }
+    }
 
     @Autowired
     protected ApplicationDescriptionParserService applicationDescriptionParserService;
@@ -33,6 +53,11 @@ public class AlgorithmDataProviderService {
 
     //TODO ake sure that there are no duplicates on the permissions lists
     public AlgorithmDataDTO prepareDataForAlgorithms(String investigatedPackageName, List<String> investigatedPackagePermissions) throws AlgorithmException {
+        if(cacheOfErrors.contains(investigatedPackageName)){
+            //TODO turn it into return, do not throw exception as it is somewhat expected
+            throw new AlgorithmException("package " + investigatedPackageName + " is known to cause errors");
+        }
+
         AlgorithmDataDTO tuple;
         try {
             List<String> similarAppNames = applicationDescriptionParserService.getSimilarAppsPackageNames(investigatedPackageName);
@@ -43,6 +68,11 @@ public class AlgorithmDataProviderService {
             List<String>deduplicateInvestigatedPackagePermissions = removeDuplicates(investigatedPackagePermissions);
             tuple = new AlgorithmDataDTO(investigatedPackageName, deduplicateInvestigatedPackagePermissions, investigateAppPermissionsFromStore, similarAppsPermissionsFromStore);
         } catch (ServiceException e) {
+            try {
+                storeInCache(investigatedPackageName);
+            } catch (ServiceException e1) {
+                throw new AlgorithmException(e);
+            }
             throw new AlgorithmException(e);
         }
         return tuple;

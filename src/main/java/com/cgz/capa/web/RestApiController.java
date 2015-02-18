@@ -70,9 +70,9 @@ public class RestApiController {
     @RequestMapping(value = "permissionsFromStore", method = RequestMethod.GET)
     public
     @ResponseBody
-    Collection<String> permissionsFromStore(@RequestParam(value = "packageName", required = true) String packageName, HttpServletResponse response)  {
+    List<String> permissionsFromStore(@RequestParam(value = "packageName", required = true) String packageName, HttpServletResponse response)  {
         try {
-            Collection<String> permissionsForPackage = crawlerService.getPermissionsForPackage(packageName);
+            List<String> permissionsForPackage = crawlerService.getPermissionsForPackage(packageName);
             return permissionsForPackage;
         } catch (ServiceException e) {
             //TODO better error handling
@@ -99,7 +99,7 @@ public class RestApiController {
     @RequestMapping(value = "similarApps", method = RequestMethod.GET)
     public
     @ResponseBody
-    Collection<String> similarAppsFromStore(@RequestParam(value = "packageName", required = true) String packageName, HttpServletResponse response)  {
+    List<String> similarAppsFromStore(@RequestParam(value = "packageName", required = true) String packageName, HttpServletResponse response)  {
         try {
             return  applicationDescriptionParserService.getSimilarAppsPackageNames(packageName);
         } catch (ServiceException e) {
