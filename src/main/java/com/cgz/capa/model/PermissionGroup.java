@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by czarek on 04/01/15.
  */
-public class PermissionGroup {
+public class PermissionGroup  {
 
     private String name;
     private PermissionGroupFlag flag;

@@ -14,7 +14,6 @@ import java.util.*;
 
 /**
  * Created by czarek on 27/01/15.
- *  * TODO implement offline (persistance) cache, so it will be possible to rerun the same analisis offline (with new params)
  */
 @Service
 public class AlgorithmDataProviderService  {
@@ -46,10 +45,6 @@ public class AlgorithmDataProviderService  {
     protected ApplicationDescriptionParserService applicationDescriptionParserService;
     @Autowired
     protected GooglePlayCrawlerService googlePlayCrawlerService;
-    @Autowired
-    protected RiskScoreFactory riskScoreFactory;
-    @Autowired
-    protected SystemPermissionsInfoService systemPermissionsInfoService;
 
     //TODO ake sure that there are no duplicates on the permissions lists
     public AlgorithmDataDTO prepareDataForAlgorithms(String investigatedPackageName, List<String> investigatedPackagePermissions) throws AlgorithmException {

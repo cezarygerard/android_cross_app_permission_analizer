@@ -24,11 +24,6 @@ public class ContrastWithSimilarAppsStep extends AbstractAlgorithmStep  {
 
     private Logger logger = LoggerFactory.getLogger(ContrastWithSimilarAppsStep.class);
 
-    @Autowired
-    protected RiskScoreFactory riskScoreFactory;
-
-    @Autowired
-    protected SystemPermissionsInfoService permissionsInfoService;
 
     protected double rarePermissionBracket;
 

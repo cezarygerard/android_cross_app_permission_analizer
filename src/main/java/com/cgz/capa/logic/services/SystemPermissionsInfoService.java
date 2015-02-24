@@ -65,6 +65,10 @@ public class SystemPermissionsInfoService {
                 }
             }
         }
+
+        for (Permission permission :permissionsMap.values()) {
+            System.out.println(permission);
+        }
     }
 
     private void parseManifest(Document manifestXmlDoc) {

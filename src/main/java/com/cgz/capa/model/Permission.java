@@ -1,6 +1,7 @@
 package com.cgz.capa.model;
 
 import com.cgz.capa.model.enums.PermissionFlag;
+import com.cgz.capa.model.enums.PermissionGroupFlag;
 import com.cgz.capa.model.enums.ProtectionLevel;
 import org.apache.commons.lang3.StringUtils;
 
@@ -8,6 +9,8 @@ import org.apache.commons.lang3.StringUtils;
  * Created by czarek on 04/01/15.
  */
 public class Permission {
+
+    public static final String NAME_PREFIX =  "android.permission.";
 
     private String name;
     private PermissionGroup group;
@@ -44,5 +47,28 @@ public class Permission {
 
     public PermissionFlag getFlag() {
         return flag;
+    }
+
+    @Override
+    public String toString() {
+        String shortName = name;
+        if(name.startsWith(NAME_PREFIX)){
+            shortName = name.substring(19);
+        }
+        String personal = "";
+        if(group!=null && group.getFlag()!=null && group.getFlag().equals(PermissionGroupFlag.PERSONAL_INFO)){
+            personal = "PERSONAL";
+        }
+
+        String level = "";
+        if (protectionLevel!=null){
+            level = protectionLevel.getName();
+        }
+
+        String flagStr ="";
+        if(flag!=null){
+            flagStr = flag.getName();
+        }
+        return shortName + ", " + level + ", " + personal + ", " + flagStr;
     }
 }

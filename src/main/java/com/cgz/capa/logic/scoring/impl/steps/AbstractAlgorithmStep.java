@@ -23,10 +23,9 @@ public abstract class AbstractAlgorithmStep implements AlgorithmStep {
     @Autowired
     protected SystemPermissionsInfoService permissionsInfoService;
 
-    @Autowired
-    protected GooglePlayCrawlerService googlePlayCrawlerService;
-
     protected String WHITESPACE = " ";
+
+    protected AlgorithmDataDTO algorithmDataDTO;
 
     public abstract RiskScore executeStep(AlgorithmDataDTO algorithmDataDTO) throws AlgorithmException;
 

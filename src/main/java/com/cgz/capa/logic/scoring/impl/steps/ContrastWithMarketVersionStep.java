@@ -32,7 +32,7 @@ public class ContrastWithMarketVersionStep extends AbstractAlgorithmStep   {
         int scoreValue = 0;
         StringBuilder stringBuilder = new StringBuilder().append(MESSAGE_PREFIX);
 
-        List<String> permissionsFromStore = downloadPermissionsFromStore(algorithmDataDTO);
+        List<String> permissionsFromStore = algorithmDataDTO.getStorePermissions();
         ;
         if (permissionsFromStore == null) {
                 return riskScoreFactory.createRiskScoreWithMessage(appNotFoundScore, "App was not found in store");
@@ -64,16 +64,5 @@ public class ContrastWithMarketVersionStep extends AbstractAlgorithmStep   {
         }
     }
 
-    private List<String> downloadPermissionsFromStore(AlgorithmDataDTO algorithmDataDTO) throws AlgorithmException {
-
-        try {
-            return googlePlayCrawlerService.getPermissionsForPackage(algorithmDataDTO.getName());
-        } catch (ServiceException e) {
-            logger.warn("Didn't find package in Google Play", e);
-
-        }
-
-        return null;
-    }
 
 }
